@@ -1,0 +1,63 @@
+﻿Speed record: Reached 10,000m/s in a vessel.
+Flash! Ah-AH! Kerbal of the Universe!: Reached 30,000m/s - 0.01% speed of light.
+Is this even possible?: Reached 300,000m/s - 0.1% speed of light.
+Oh my God. What? - Reached 300,000,000m/s (speed of light).
+
+Stoopid Speed Record: Reached 1000m/s during EVA.
+Open the pod bay do-WAAAGH! - Achieved Kerbol escape trajectory whilst EVA.
+
+Lag times/What IS this?/Miracle of laggineering: 300/500/750 part vessel/station.
+
+Voyager: Send a Kerbal on a Kerbol escape trajectory with 10,000m/s dV left.
+Colony ship: Send 10 Kerbals in one vessel on a Voyager trajectory.
+Invasion: Send 100 Kerbals in one vessel on a Voyager trajectory.
+
+Outpost: Man/Kerbal an off-planet ground base for a year.
+Going quietly sane: An individual Kerbal in space continuously for a year.
+
+-------------------------------------------------------------------------------------------------------
+
+-Free return trajectory around Mun
+-SSTO
+-Aerobraking into an orbit
+
+-------------------------------------------------------------------------------------------------------
+
+"Rapid Unplanned Disassembly!" achievement for exploding on the launchpad?
+
+"Any landing you can walk away from..." for a crash which has at least one surviving crewed command pod, and then EVA from that surviving pod.
+
+-------------------------------------------------------------------------------------------------------
+
+"Solid Rocket King" - Achieve orbit using only solid rocket boosters
+
+-------------------------------------------------------------------------------------------------------
+
+One Way Trip: Reach solar escape trajectory
+Emissary To The Stars: Reach 250 million km out on solar escape
+
+-------------------------------------------------------------------------------------------------------
+
+-"Tried it at least": Hit the abort button, all kerbals [die] anyhow.
+-"I Too Like to Live Dangerously" : Enter kerbins atmosphere with 6000m/s
+
+-------------------------------------------------------------------------------------------------------
+
+Who Needs Spaceships? - Put yourself into orbit with a jetpack.
+Don't Move or I'll Chute - Land safely using only parachutes.
+
+-------------------------------------------------------------------------------------------------------
+
+-"I have no memory of this place" - land at KSC2
+-"Not as bad as it looks" - land on the island runway
+-"Dejavu" - Walk into the hangar on the island airfield(where the old stock parts are)
+-"I'll be back" - Sun escape velocity with no fuel left
+
+-------------------------------------------------------------------------------------------------------
+
+"We need a kick" - have a fly-by trajectory of any body with atmosphere right above the atmosphere with no fuel left. (Supposing somebody failed aerobraking)
+"Pit stop" - have an escape trajectory after aerobraking
+"Over engineer 1st class" - Recover the vessel after at least orbital flight with more than 50% fuel left (Do not know if this is possible to spot though)
+"FIAL" - Have your rocket explode before take-off
+"Are you kidding?" - lose a Kerbal on EVA on the surface of planet (suppose that will be something like rover crashed the kerbal or some other silly situation)
+"That is not the droids we are looking for" - visit a crash site of another rocket after some time past the crash

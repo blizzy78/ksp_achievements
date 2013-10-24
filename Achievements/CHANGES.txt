@@ -1,0 +1,37 @@
+﻿1.4.2, 2013-10-23
+- All landing achievements now require that lateral speed be lower than 1.0 m/s. This is to prevent
+  only touching the surface with an airplane, then pulling up again, for example.
+- Added 6 new achievements (now 90 total.)
+
+1.4.1, 2013-10-22
+- The achievement "Kessler Syndrome" will now show an actual count of debris objects.
+- Added 4 new achievements (now 84 total.)
+
+1.4.0, 2013-10-20
+- The plugin will now check if a new version is available.
+- Added 6 new achievements (now 80 total.)
+
+1.3.1, 2013-10-19
+- Fixed a NullReferenceException.
+- Added 1 new achievement (now 74 total.)
+
+1.3.0, 2013-10-18
+- Every achievement earned will now award 5 science in career mode.
+- Added 2 new achievements (now 73 total), and renamed some achievements.
+
+1.2.1, 2013-10-17
+- Landing achievements don't count for EVA'd Kerbals anymore, they will require a vessel to be landed.
+- "Toast" sound clip will now play correctly even when the current vessel is destroyed.
+- Added 18 new achievements (now 71 total.)
+
+1.2.0, 2013-10-16
+- Updated for KSP 0.22. The plugin will no longer work with KSP 0.21.x.
+- Achievement "toast" will no longer be displayed on top of the nav ball.
+- Added 5 new achievements (now 53 total.)
+
+1.1.0, 2013-10-15
+- Added a list of all achievements available.
+- Added 4 new achievements (now 48 total.)
+
+1.0.0, 2013-10-13
+- Initial public release.

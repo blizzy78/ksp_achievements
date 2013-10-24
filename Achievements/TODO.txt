@@ -1,0 +1,15 @@
+﻿Achievements:
+
+- (1) geosynchronous orbit
+- (1) eccentric orbit (eccentricity?, starting orbit must be circular)
+- (1) Perform an aerocapture maneuver. (patch transition ESCAPE -> FINAL, must dig into atmosphere)
+- (1) Perform a rendezvous maneuver. (relative velocity <= 0.5 m/s, distance <= 100 m)
+- (1) Land on the small isle inside Kerbin's crater.
+- (1) Land at the island airport.
+
+- escape SoI (actual SoI transition)
+- EVA
+- experiments (orbit, surface)
+- submerge into an ocean
+- apollo 11
+- apollo 11 without quicksave
