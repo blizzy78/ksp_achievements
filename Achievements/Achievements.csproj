@@ -82,9 +82,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Toast.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="etc\achievements.psd" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="CHANGES.txt" />
+    <Content Include="etc\screenshot-all.png" />
+    <Content Include="etc\screenshot.png" />
     <Content Include="LICENSE.txt" />
     <Content Include="SUGGESTIONS.txt" />
     <Content Include="TODO.txt" />
