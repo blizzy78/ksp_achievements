@@ -24,7 +24,7 @@ using UnityEngine;
 class DockingFactory : AchievementFactory {
 	public IEnumerable<Achievement> getAchievements() {
 		return new Achievement[] {
-			new Docking()
+			new Docking(true, false, "We're Meant to Be Together", "Perform a docking maneuver in orbit.", "docking")
 		};
 	}
 
@@ -33,10 +33,33 @@ class DockingFactory : AchievementFactory {
 	}
 }
 
+class SurfaceDockingFactory : AchievementFactory {
+	public IEnumerable<Achievement> getAchievements() {
+		return new Achievement[] {
+			new Docking(false, true, "Base Builder", "Perform a docking maneuver on the surface of another planet or moon.", "docking.surface")
+		};
+	}
+
+	public Category getCategory() {
+		return Category.GROUND_OPERATIONS;
+	}
+}
+
 class Docking : AchievementBase {
+	private bool stableOrbit;
+	private bool surface;
+	private string title;
+	private string text;
+	private string key;
 	private bool dockStep;
 
-	public Docking() {
+	public Docking(bool stableOrbit, bool surface, string title, string text, string key) {
+		this.stableOrbit = stableOrbit;
+		this.surface = surface;
+		this.title = title;
+		this.text = text;
+		this.key = key;
+
 		registerOnPartCouple(onPartCouple);
 	}
 
@@ -45,18 +68,20 @@ class Docking : AchievementBase {
 	}
 
 	public void onPartCouple(GameEvents.FromToAction<Part, Part> action) {
-		dockStep = true;
+		Vessel vessel = action.from.vessel;
+		dockStep = (stableOrbit && vessel.isInStableOrbit()) ||
+			(surface && vessel.isOnSurface() && !vessel.getCurrentBody().Equals(Body.KERBIN));
 	}
 
 	public override string getTitle() {
-		return "We're Meant to Be Together";
+		return title;
 	}
 
 	public override string getText() {
-		return "Perform a docking maneuver.";
+		return text;
 	}
 
 	public override string getKey() {
-		return "docking";
+		return key;
 	}
 }

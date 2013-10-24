@@ -1,4 +1,7 @@
-﻿1.4.2, 2013-10-23
+﻿1.4.3
+- The achievement "We're Meant to Be Together" now requires that the craft be in a stable orbit.
+
+1.4.2, 2013-10-23
 - All landing achievements now require that lateral speed be lower than 1.0 m/s. This is to prevent
   only touching the surface with an airplane, then pulling up again, for example.
 - Added 6 new achievements (now 90 total.)
