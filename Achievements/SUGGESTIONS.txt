@@ -49,7 +49,6 @@ Don't Move or I'll Chute - Land safely using only parachutes.
 -------------------------------------------------------------------------------------------------------
 
 -"I have no memory of this place" - land at KSC2
--"Not as bad as it looks" - land on the island runway
 -"Dejavu" - Walk into the hangar on the island airfield(where the old stock parts are)
 -"I'll be back" - Sun escape velocity with no fuel left
 
