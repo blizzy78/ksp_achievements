@@ -23,6 +23,9 @@ using System.Text;
 public class Location {
 	public static readonly Location KSC = new Location(Body.KERBIN, 0.097.south(), 74.557.west(), 2000);
 	public static readonly Location KSC_LAUNCH_PAD = new Location(Body.KERBIN, 0.09722.south(), 74.5575.west(), 15);
+	public static readonly Location KSC_HELICOPTER_PAD = new Location(Body.KERBIN, 0.09583.south(), 74.62111.west(), 0.0975.south(), 74.61611.west());
+	public static readonly Location KERBIN_NORTH_POLE = new Location(Body.KERBIN, 90d.north(), 0d.east(), 10000);
+	public static readonly Location KERBIN_SOUTH_POLE = new Location(Body.KERBIN, 90d.south(), 0d.east(), 10000);
 	
 	// this is compensated for the runway not being exactly parallel to the equator, leading to small areas outside of the actual runway
 	public static readonly Location KSC_RUNWAY = new Location(Body.KERBIN, 0.05277.south(), 74.72833.west(), 0.04555.south(), 74.48833.west());

@@ -60,12 +60,12 @@ class LandingFactory : AchievementFactory {
 				new Location(Body.MUN, 5.672.north(), 151.283.west(), 37000)
 			}, "Deep Down the Hole", "Land inside one of the big craters on the Mun.", "landing.mun.crater", false),
 			new BodyLanding(Body.KERBIN, false, true, -1, new Location[] { Location.KSC }, "Home Sweet Home", "Land at the Kerbal Space Center.", "landing.ksc", false),
-			new BodyLanding(Body.KERBIN, false, true, -1, new Location[] {
-				new Location(Body.KERBIN, 90d.north(), 0d.east(), 10000),
-				new Location(Body.KERBIN, 90d.south(), 0d.east(), 10000)
-			}, "I'm Freezing Out Here", "Land on the north or south pole of Kerbin.", "landing.kerbin.pole", false),
+			new BodyLanding(Body.KERBIN, false, true, -1, new Location[] { Location.KERBIN_NORTH_POLE, Location.KERBIN_SOUTH_POLE },
+				"I'm Freezing Out Here", "Land on the north or south pole of Kerbin.", "landing.kerbin.pole", false),
 			new BodyLanding(Body.KERBIN, false, false, 10000, new Location[] { Location.KSC_LAUNCH_PAD },
 				"Grasshopper", "Land on the Kerbal Space Center launch pad from an altitude of at least 10000 m.", "landing.kscLaunchPad", false),
+			new BodyLanding(Body.KERBIN, false, false, 10000, new Location[] { Location.KSC_HELICOPTER_PAD },
+				"Chopper License", "Land on the Kerbal Space Center helicopter pad from an altitude of at least 10000 m.", "landing.kscHelicopterPad", false),
 			new BodyLanding(Body.KERBIN, false, false, 10000, new Location[] { Location.KSC_RUNWAY },
 				"Pilot License", "Land on the Kerbal Space Center runway from an altitude of at least 10000 m.", "landing.kscRunway", false),
 			new BodyLanding(Body.KERBIN, false, false, 10000, new Location[] { Location.ISLAND_RUNWAY },
