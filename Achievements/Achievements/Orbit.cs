@@ -33,7 +33,8 @@ class OrbitFactory : AchievementFactory {
 			new ExtraKerbalPlanetOrbit(),
 			new MoonOrbit(),
 			new KesslerSyndrome(),
-			new SSTO()
+			new SSTO(),
+			new JetPackOrbit()
 		});
 		return achievements;
 	}
@@ -215,5 +216,41 @@ class SSTO : OrbitAchievement {
 
 	public override string getKey() {
 		return "stableOrbit.ssto";
+	}
+}
+
+class JetPackOrbit : OrbitAchievement {
+	private bool surfaceStep;
+
+	public JetPackOrbit() {
+		registerOnVesselChange(onVesselChange);
+	}
+
+	private void onVesselChange(Vessel vessel) {
+		surfaceStep = false;
+	}
+
+	public override bool check(Vessel vessel) {
+		if ((vessel != null) && vessel.isEVA()) {
+			if (!surfaceStep) {
+				surfaceStep = vessel.isOnSurface();
+			}
+
+			return surfaceStep && base.check(vessel);
+		} else {
+			return false;
+		}
+	}
+
+	public override string getTitle() {
+		return "Who Needs Spaceships, Anyway?";
+	}
+
+	public override string getText() {
+		return "Get into a stable orbit by only using the EVA jet pack.";
+	}
+
+	public override string getKey() {
+		return "stableOrbit.jetPack";
 	}
 }
