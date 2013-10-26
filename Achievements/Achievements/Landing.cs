@@ -58,7 +58,7 @@ class LandingFactory : AchievementFactory {
 				new Location(Body.MUN, 61.936.north(), 32.985.west(), 48000),
 				new Location(Body.MUN, 2.063.north(), 56.534.west(), 39000),
 				new Location(Body.MUN, 5.672.north(), 151.283.west(), 37000)
-			}, "Deep Down the Hole", "Land inside one of the big craters on the Mun.", "landing.mun.crater", false),
+			}, "Deep Impact", "Land inside one of the big craters on the Mun.", "landing.mun.crater", false),
 			new BodyLanding(Body.KERBIN, false, true, -1, new Location[] { Location.KSC }, "Home Sweet Home", "Land at the Kerbal Space Center.", "landing.ksc", false),
 			new BodyLanding(Body.KERBIN, false, true, -1, new Location[] { Location.KERBIN_NORTH_POLE, Location.KERBIN_SOUTH_POLE },
 				"I'm Freezing Out Here", "Land on the north or south pole of Kerbin.", "landing.kerbin.pole", false),
