@@ -18,7 +18,6 @@ Going quietly sane: An individual Kerbal in space continuously for a year.
 -------------------------------------------------------------------------------------------------------
 
 -Free return trajectory around Mun
--SSTO
 -Aerobraking into an orbit
 
 -------------------------------------------------------------------------------------------------------
