@@ -228,12 +228,10 @@ class AllCrewAliveLanding : AchievementBase {
 		if ((vessel != null) && !vessel.isEVA()) {
 			if (!flyingStep) {
 				crewCount = vessel.GetCrewCount();
-				if (!vessel.isOnSurface() && (crewCount > 0)) {
-					flyingStep = true;
-				}
+				flyingStep = !vessel.isOnSurface() && (crewCount > 0);
 			}
 
-			if (flyingStep && !abortStep) {
+			if (!abortStep) {
 				abortStep = !mustUseAbort || vessel.ActionGroups[KSPActionGroup.Abort];
 			}
 

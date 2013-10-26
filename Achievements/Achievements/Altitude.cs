@@ -68,8 +68,8 @@ class Altitude : AchievementBase {
 		if (vessel != null) {
 			Body currentBody = vessel.getCurrentBody();
 
-			if (vessel.isOnSurface() && currentBody.Equals(body)) {
-				onSurfaceStep = true;
+			if (!onSurfaceStep) {
+				onSurfaceStep = vessel.isOnSurface() && currentBody.Equals(body);
 			}
 
 			return onSurfaceStep && currentBody.Equals(body) && vessel.altitude.between(minAltitude, maxAltitude);

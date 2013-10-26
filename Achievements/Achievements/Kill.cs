@@ -60,8 +60,8 @@ class Kill : CountingAchievement {
 	}
 
 	private void onCrewKilled(EventReport report) {
-		// make sure to not double-count
 		string crewName = report.sender;
+		// make sure to not double-count
 		if (!killedCrewNames.Contains(crewName)) {
 			killedCrewNames.Add(crewName);
 

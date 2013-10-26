@@ -41,7 +41,7 @@ class KSCBuildingCrash : AchievementBase {
 		"Satellite Dish",
 		"Mission Control",
 		"Astronaunt Complex Building", // sic 0.21.1
-		"Astronaut Complex Building"
+		"Astronaut Complex Building" // anticipate forward compatibility
 	};
 
 	private bool crashStep;
@@ -60,10 +60,8 @@ class KSCBuildingCrash : AchievementBase {
 	}
 
 	public void onCrash(EventReport report) {
-		if (report.eventType == FlightEvents.CRASH) {
-			if ((report.other != null) && BUILDING_NAMES.Contains(report.other)) {
-				crashStep = true;
-			}
+		if ((report.other != null) && BUILDING_NAMES.Contains(report.other)) {
+			crashStep = true;
 		}
 	}
 

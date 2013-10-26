@@ -65,18 +65,22 @@ class AllBodiesFlags : CountingAchievement {
 	}
 
 	public override bool check(Vessel vessel) {
-		resetCounter();
-		HashSet<Body> bodies = new HashSet<Body>();
-		foreach (Vessel v in FlightGlobals.Vessels) {
-			if (v.vesselType == VesselType.Flag) {
-				Body body = v.getCurrentBody();
-				if (!bodies.Contains(body)) {
-					increaseCounter();
-					bodies.Add(body);
+		if (FlightGlobals.fetch != null) {
+			resetCounter();
+			HashSet<Body> bodies = new HashSet<Body>();
+			foreach (Vessel v in FlightGlobals.Vessels) {
+				if (v.vesselType == VesselType.Flag) {
+					Body body = v.getCurrentBody();
+					if (!bodies.Contains(body)) {
+						increaseCounter();
+						bodies.Add(body);
+					}
 				}
 			}
+			return base.check(vessel);
+		} else {
+			return false;
 		}
-		return base.check(vessel);
 	}
 
 	public override string getTitle() {

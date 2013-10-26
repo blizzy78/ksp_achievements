@@ -188,10 +188,10 @@ class SSTO : OrbitAchievement {
 		if (vessel != null) {
 			if (!preLaunchStep) {
 				preLaunchStep = vessel.isPreLaunched();
+			}
 
-				if (preLaunchStep) {
-					numParts = getNumParts(vessel);
-				}
+			if (vessel.isPreLaunched()) {
+				numParts = getNumParts(vessel);
 			}
 
 			return base.check(vessel) && preLaunchStep && (getNumParts(vessel) == numParts) && vessel.getCurrentBody().Equals(Body.KERBIN);

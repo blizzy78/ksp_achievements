@@ -100,9 +100,7 @@ class AllTechsResearched : AchievementBase {
 
 	public override bool check(Vessel vessel) {
 		if (!initialCheck) {
-			if (checkTechs()) {
-				initialCheck = true;
-			}
+			initialCheck = checkTechs();
 		}
 
 		return allTechsResearched;
