@@ -64,6 +64,7 @@
     <Compile Include="Achievements\EVA.cs" />
     <Compile Include="Achievements\HyperEdit.cs" />
     <Compile Include="Achievements\Jump.cs" />
+    <Compile Include="Achievements\TenSecondsFromLaunchPadToVAB.cs" />
     <Compile Include="Achievements\SurfaceSample.cs" />
     <Compile Include="Achievements\Tech.cs" />
     <Compile Include="Achievements\Launch.cs" />

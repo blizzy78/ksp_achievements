@@ -45,6 +45,10 @@ public abstract class AchievementBase : Achievement {
 		GameEvents.onVesselCreate.Add(new EventData<Vessel>.OnEvent(callback));
 	}
 
+	protected void registerOnVesselSituationChange(EventData<GameEvents.HostedFromToAction<Vessel, Vessel.Situations>>.OnEvent callback) {
+		GameEvents.onVesselSituationChange.Add(new EventData<GameEvents.HostedFromToAction<Vessel, Vessel.Situations>>.OnEvent(callback));
+	}
+
 	protected void registerOnCrash(EventData<EventReport>.OnEvent callback) {
 		GameEvents.onCrash.Add(new EventData<EventReport>.OnEvent(callback));
 	}
