@@ -24,7 +24,9 @@ using UnityEngine;
 class BodyEVAFactory : AchievementFactory {
 	public IEnumerable<Achievement> getAchievements() {
 		return new Achievement[] {
-			new AllBodiesEVA()
+			new AllBodiesEVA(Body.STOCK_LANDABLE, "Steps in the Sand", "Set foot on every planet and moon.", "landing.allBodiesEVA"),
+			new AllBodiesEVA(Body.SENTAR_LANDABLE, "More Steps in the Sand", "Set foot on every planet and moon in the Sentar system.",
+				"landing.allBodiesEVA.sentar").addon()
 		};
 	}
 
@@ -34,18 +36,26 @@ class BodyEVAFactory : AchievementFactory {
 }
 
 class AllBodiesEVA : CountingAchievement {
-	private Dictionary<Body, bool> bodies = new Dictionary<Body, bool>();
+	private IEnumerable<Body> bodies;
+	private string title;
+	private string text;
+	private string key;
+	private Dictionary<Body, bool> landedBodies = new Dictionary<Body, bool>();
 
-	public AllBodiesEVA() : base(Body.LANDABLE.Count()) {
+	public AllBodiesEVA(IEnumerable<Body> bodies, string title, string text, string key) : base(bodies.Count()) {
+		this.bodies = bodies;
+		this.title = title;
+		this.text = text;
+		this.key = key;
 	}
 
 	public override void init(ConfigNode node) {
-		foreach (Body body in Body.LANDABLE) {
+		foreach (Body body in bodies) {
 			bool landed = false;
 			if (node.HasValue(body.name)) {
 				landed = bool.Parse(node.GetValue(body.name));
 			}
-			bodies.Add(body, landed);
+			landedBodies.Add(body, landed);
 			if (landed) {
 				increaseCounter();
 			}
@@ -53,12 +63,12 @@ class AllBodiesEVA : CountingAchievement {
 	}
 
 	public override void save(ConfigNode node) {
-		foreach (Body body in bodies.Keys) {
-			if (bodies[body]) {
+		foreach (Body body in landedBodies.Keys) {
+			if (landedBodies[body]) {
 				if (node.HasValue(body.name)) {
 					node.RemoveValue(body.name);
 				}
-				node.AddValue(body.name, bodies[body].ToString());
+				node.AddValue(body.name, landedBodies[body].ToString());
 			}
 		}
 	}
@@ -66,28 +76,30 @@ class AllBodiesEVA : CountingAchievement {
 	public override bool check(Vessel vessel) {
 		if ((vessel != null) && vessel.isEVA() && vessel.isOnSurface()) {
 			Body body = vessel.getCurrentBody();
-			if (bodies.ContainsKey(body)) {
-				bodies.Remove(body);
-			}
-			bodies.Add(body, true);
+			if (bodies.Contains(body)) {
+				if (landedBodies.ContainsKey(body)) {
+					landedBodies.Remove(body);
+				}
+				landedBodies.Add(body, true);
 
-			resetCounter();
-			foreach (var x in bodies.Where(kv => kv.Value)) {
-				increaseCounter();
+				resetCounter();
+				foreach (var x in landedBodies.Where(kv => kv.Value)) {
+					increaseCounter();
+				}
 			}
 		}
 		return base.check(vessel);
 	}
 
 	public override string getTitle() {
-		return "Steps in the Sand";
+		return title;
 	}
 
 	public override string getText() {
-		return "Set foot on every planet and moon.";
+		return text;
 	}
 
 	public override string getKey() {
-		return "landing.allBodiesEVA";
+		return key;
 	}
 }

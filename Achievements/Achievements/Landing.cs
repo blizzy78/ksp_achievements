@@ -23,13 +23,9 @@ using UnityEngine;
 
 class LandingFactory : AchievementFactory {
 	public IEnumerable<Achievement> getAchievements() {
-		return new Achievement[] {
+		List<Achievement> achievements = new List<Achievement>();
+		achievements.AddRange(new Achievement[] {
 			new Landing(false, -1),
-			new AllCrewAliveLanding(false,
-				"I Think We Made It", "Land on the surface of a celestial body with all crew members still alive.", "landing.allCrewAlive"),
-			new AllCrewAliveLanding(true,
-				"That Was Close", "Abort a launch and land with all crew members still alive.", "landing.allCrewAlive.abort"),
-			new EnginesDestroyedLanding(),
 
 			new BodyLanding(Body.MOHO, false, "Hot Foot"),
 			new BodyLanding(Body.EVE, false, "Good Luck Getting Back"),
@@ -49,7 +45,22 @@ class LandingFactory : AchievementFactory {
 
 			new BodyLanding(Body.KERBIN, true, "Taking a Bath"),
 			new BodyLanding(Body.EVE, true, "Looks Like Water, Feels Like Water"),
-			new BodyLanding(Body.LAYTHE, true, "Just As Wet As At Home"),
+			new BodyLanding(Body.LAYTHE, true, "Just As Wet As At Home")
+		});
+
+		foreach (Body body in Body.ALL_LANDABLE.Where(b => !b.isStock())) {
+			achievements.Add(new BodyLanding(body, false, "One Small Step - " + body.name).addon());
+		}
+		foreach (Body body in Body.ALL_SPLASHABLE.Where(b => !b.isStock())) {
+			achievements.Add(new BodyLanding(body, true, "Taking a Bath - " + body.name).addon());
+		}
+
+		achievements.AddRange(new Achievement[] {
+			new AllCrewAliveLanding(false,
+				"I Think We Made It", "Land on the surface of a celestial body with all crew members still alive.", "landing.allCrewAlive"),
+			new AllCrewAliveLanding(true,
+				"That Was Close", "Abort a launch and land with all crew members still alive.", "landing.allCrewAlive.abort"),
+			new EnginesDestroyedLanding(),
 
 			new BodyLanding(Body.MUN, false, true, -1, new Location[] {
 				new Location(Body.MUN, 10.886.south(), 81.182.east(), 44000),
@@ -72,7 +83,9 @@ class LandingFactory : AchievementFactory {
 				"Not As Bad As It Looks", "Land on the island runway from an altitude of at least 10000 m.", "landing.islandRunway", true),
 			new BodyLanding(Body.MUN, false, true, -1, new Location[] { Location.ARMSTRONG_MEMORIAL },
 				"First... Not", "Land at the Armstrong Memorial.", "landing.armstrongMemorial", true)
-		};
+		});
+
+		return achievements;
 	}
 
 	public Category getCategory() {

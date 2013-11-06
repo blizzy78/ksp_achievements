@@ -26,11 +26,15 @@ class AltitudeFactory : AchievementFactory {
 		return new Achievement[] {
 			new Altitude(Body.KERBIN, 10000d, 11000d,
 				"I'm Flying!", "Fly up to an altitude of 10000 m above the surface of Kerbin.", "flight.altitude." + Body.KERBIN.name + ".10000"),
-			new Altitude(Body.SUN, 0d, 1000000d, "Sunburn", "Get within 1000 km to the Sun.", "flight.altitude." + Body.SUN.name + ".1000000"),
+			new Altitude(Body.SUN, 0d, 1000000d, "Sunburn", "Get within a distance of 1000 km to the Sun.", "flight.altitude." + Body.SUN.name + ".1000000"),
+
 			new AboveAtmosphere(Body.EVE, 96708d, 97708d),
 			new AboveAtmosphere(Body.KERBIN, 69077d, 70077d),
 			new AboveAtmosphere(Body.DUNA, 41446d, 42446d),
-			new AboveAtmosphere(Body.LAYTHE, 55262d, 56262d)
+			new AboveAtmosphere(Body.LAYTHE, 55262d, 56262d),
+
+			new AboveAtmosphere(Body.ERIN, 49500d, 50500d).addon(),
+			new AboveAtmosphere(Body.SKELTON, 89500d, 90500d).addon()
 		};
 	}
 

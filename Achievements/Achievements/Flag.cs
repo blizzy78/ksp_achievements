@@ -25,7 +25,9 @@ class FlagFactory : AchievementFactory {
 	public IEnumerable<Achievement> getAchievements() {
 		return new Achievement[] {
 			new ExtraKerbalFlag(),
-			new AllBodiesFlags()
+			new AllBodiesFlags(Body.STOCK_LANDABLE, "All Your Base Are Belong to Us", "Plant a flag on every planet and moon.", "landing.allBodiesFlags"),
+			new AllBodiesFlags(Body.SENTAR_LANDABLE, "All Your Base Are Belong to Us - Sentar", "Plant a flag on every planet and moon in the Sentar system.",
+				"landing.allBodiesFlags.sentar").addon()
 		};
 	}
 
@@ -39,7 +41,7 @@ class ExtraKerbalFlag : AchievementBase {
 		if (FlightGlobals.fetch != null) {
 			HashSet<Body> bodies = new HashSet<Body>();
 			foreach (Vessel v in FlightGlobals.Vessels) {
-				if ((v.vesselType == VesselType.Flag) && Body.PLANETS_WITHOUT_KERBIN.Contains(v.getCurrentBody())) {
+				if ((v.vesselType == VesselType.Flag) && Body.ALL_PLANETS_WITHOUT_KERBIN.Contains(v.getCurrentBody())) {
 					return true;
 				}
 			}
@@ -61,7 +63,16 @@ class ExtraKerbalFlag : AchievementBase {
 }
 
 class AllBodiesFlags : CountingAchievement {
-	public AllBodiesFlags() : base(Body.LANDABLE.Count()) {
+	private IEnumerable<Body> bodies;
+	private string title;
+	private string text;
+	private string key;
+
+	public AllBodiesFlags(IEnumerable<Body> bodies, string title, string text, string key) : base(bodies.Count()) {
+		this.bodies = bodies;
+		this.title = title;
+		this.text = text;
+		this.key = key;
 	}
 
 	public override bool check(Vessel vessel) {
@@ -71,7 +82,7 @@ class AllBodiesFlags : CountingAchievement {
 			foreach (Vessel v in FlightGlobals.Vessels) {
 				if (v.vesselType == VesselType.Flag) {
 					Body body = v.getCurrentBody();
-					if (!bodies.Contains(body)) {
+					if (this.bodies.Contains(body) && !bodies.Contains(body)) {
 						increaseCounter();
 						bodies.Add(body);
 					}
@@ -84,14 +95,14 @@ class AllBodiesFlags : CountingAchievement {
 	}
 
 	public override string getTitle() {
-		return "All Your Base Are Belong to Us";
+		return title;
 	}
 
 	public override string getText() {
-		return "Plant a flag on every planet and moon.";
+		return text;
 	}
 
 	public override string getKey() {
-		return "landing.allBodiesFlags";
+		return key;
 	}
 }

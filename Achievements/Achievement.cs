@@ -28,4 +28,5 @@ public interface Achievement {
 	string getText();
 	string getKey();
 	bool isHidden();
+	bool isAddon();
 }

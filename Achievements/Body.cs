@@ -41,13 +41,38 @@ public class Body {
 	public static readonly Body BOP = new Body("Bop");
 	public static readonly Body POL = new Body("Pol");
 
-	public static readonly IEnumerable<Body> ALL = new Body[] { SUN, MOHO, EVE, KERBIN, DUNA, DRES, JOOL, EELOO, GILLY, MUN, MINMUS, IKE, LAYTHE, VALL, TYLO, BOP, POL };
-	public static readonly IEnumerable<Body> PLANETS = new Body[] { MOHO, EVE, KERBIN, DUNA, DRES, JOOL, EELOO };
-	public static readonly IEnumerable<Body> PLANETS_WITHOUT_KERBIN = new Body[] { MOHO, EVE, DUNA, DRES, JOOL, EELOO };
-	public static readonly IEnumerable<Body> MOONS = new Body[] { GILLY, MUN, MINMUS, IKE, LAYTHE, VALL, TYLO, BOP, POL };
-	public static readonly IEnumerable<Body> LANDABLE = new Body[] { MOHO, EVE, KERBIN, DUNA, DRES, EELOO, GILLY, MUN, MINMUS, IKE, LAYTHE, VALL, TYLO, BOP, POL };
-	public static readonly IEnumerable<Body> SPLASHABLE = new Body[] { EVE, KERBIN, LAYTHE };
-	public static readonly IEnumerable<Body> WITH_ATMOSPHERE = new Body[] { EVE, KERBIN, DUNA, JOOL, LAYTHE };
+	public static readonly Body ABLATE = new Body("Ablate");
+	public static readonly Body ASCENSION = new Body("Ascension");
+	public static readonly Body ERIN = new Body("Erin");
+	public static readonly Body INACCESSABLE = new Body("Inaccessable");
+	public static readonly Body POCK = new Body("Pock");
+	public static readonly Body RINGLE = new Body("Ringle");
+	public static readonly Body SENTAR = new Body("Sentar");
+	public static readonly Body SKELTON = new Body("Skelton");
+	public static readonly Body THUD = new Body("Thud");
+
+	public static readonly IEnumerable<Body> STOCK_ALL = new Body[] { SUN, MOHO, EVE, KERBIN, DUNA, DRES, JOOL, EELOO, GILLY, MUN, MINMUS, IKE, LAYTHE, VALL, TYLO, BOP, POL };
+	public static readonly IEnumerable<Body> STOCK_PLANETS = new Body[] { MOHO, EVE, KERBIN, DUNA, DRES, JOOL, EELOO };
+	public static readonly IEnumerable<Body> STOCK_PLANETS_WITHOUT_KERBIN = new Body[] { MOHO, EVE, DUNA, DRES, JOOL, EELOO };
+	public static readonly IEnumerable<Body> STOCK_MOONS = new Body[] { GILLY, MUN, MINMUS, IKE, LAYTHE, VALL, TYLO, BOP, POL };
+	public static readonly IEnumerable<Body> STOCK_LANDABLE = new Body[] { MOHO, EVE, KERBIN, DUNA, DRES, EELOO, GILLY, MUN, MINMUS, IKE, LAYTHE, VALL, TYLO, BOP, POL };
+	public static readonly IEnumerable<Body> STOCK_SPLASHABLE = new Body[] { EVE, KERBIN, LAYTHE };
+	public static readonly IEnumerable<Body> STOCK_WITH_ATMOSPHERE = new Body[] { EVE, KERBIN, DUNA, JOOL, LAYTHE };
+
+	public static readonly IEnumerable<Body> SENTAR_ALL = new Body[] { ABLATE, ASCENSION, ERIN, INACCESSABLE, POCK, RINGLE, SENTAR, SKELTON, THUD };
+	public static readonly IEnumerable<Body> SENTAR_PLANETS = new Body[] { ABLATE, ASCENSION, ERIN, INACCESSABLE, RINGLE, SENTAR, SKELTON, THUD };
+	public static readonly IEnumerable<Body> SENTAR_MOONS = new Body[] { POCK };
+	public static readonly IEnumerable<Body> SENTAR_LANDABLE = new Body[] { ABLATE, ASCENSION, ERIN, INACCESSABLE, POCK, RINGLE, SKELTON, THUD };
+	public static readonly IEnumerable<Body> SENTAR_SPLASHABLE = new Body[] { ERIN };
+	public static readonly IEnumerable<Body> SENTAR_WITH_ATMOSPHERE = new Body[] { ERIN, SENTAR, SKELTON };
+
+	public static readonly IEnumerable<Body> ALL = flatten(STOCK_ALL, SENTAR_ALL);
+	public static readonly IEnumerable<Body> ALL_PLANETS = flatten(STOCK_PLANETS, SENTAR_PLANETS);
+	public static readonly IEnumerable<Body> ALL_PLANETS_WITHOUT_KERBIN = flatten(STOCK_PLANETS_WITHOUT_KERBIN, SENTAR_PLANETS);
+	public static readonly IEnumerable<Body> ALL_MOONS = flatten(STOCK_MOONS, SENTAR_MOONS);
+	public static readonly IEnumerable<Body> ALL_LANDABLE = flatten(STOCK_LANDABLE, SENTAR_LANDABLE);
+	public static readonly IEnumerable<Body> ALL_SPLASHABLE = flatten(STOCK_SPLASHABLE, SENTAR_SPLASHABLE);
+	public static readonly IEnumerable<Body> ALL_WITH_ATMOSPHERE = flatten(STOCK_WITH_ATMOSPHERE, SENTAR_WITH_ATMOSPHERE);
 
 	public readonly string name;
 	public readonly string theName;
@@ -60,8 +85,20 @@ public class Body {
 		this.theName = theName;
 	}
 
+	private static IEnumerable<Body> flatten(params IEnumerable<Body>[] bodies) {
+		List<Body> result = new List<Body>();
+		foreach (IEnumerable<Body> bs in bodies) {
+			result.AddRange(bs);
+		}
+		return result;
+	}
+
 	public bool isSame(CelestialBody b) {
 		return name == b.name;
+	}
+
+	public bool isStock() {
+		return STOCK_ALL.Contains(this);
 	}
 
 	public CelestialBody getCelestialBody() {

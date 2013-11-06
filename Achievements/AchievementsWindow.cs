@@ -138,6 +138,6 @@ class AchievementsWindow {
 	}
 
 	private void drawAchievement(Achievement achievement, AchievementEarn earn) {
-		new AchievementGUI(achievement, earn).draw(true);
+		new AchievementGUI(achievement, earn).draw(true, true);
 	}
 }

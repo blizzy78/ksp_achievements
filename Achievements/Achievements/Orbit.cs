@@ -26,7 +26,7 @@ class OrbitFactory : AchievementFactory {
 	public IEnumerable<Achievement> getAchievements() {
 		List<Achievement> achievements = new List<Achievement>();
 		foreach (Body body in Body.ALL) {
-			achievements.Add(new BodyOrbit(body));
+			achievements.Add(new BodyOrbit(body).addon(!body.isStock()));
 		}
 		achievements.AddRange(new Achievement[] {
 			new OrbitAchievement(),
@@ -99,7 +99,7 @@ abstract class AnyBodyOrbit : OrbitAchievement {
 }
 
 class ExtraKerbalPlanetOrbit : AnyBodyOrbit {
-	public ExtraKerbalPlanetOrbit() : base(Body.PLANETS_WITHOUT_KERBIN) {
+	public ExtraKerbalPlanetOrbit() : base(Body.ALL_PLANETS_WITHOUT_KERBIN) {
 	}
 
 	public override string getTitle() {
@@ -116,7 +116,7 @@ class ExtraKerbalPlanetOrbit : AnyBodyOrbit {
 }
 
 class MoonOrbit : AnyBodyOrbit {
-	public MoonOrbit() : base(Body.MOONS) {
+	public MoonOrbit() : base(Body.ALL_MOONS) {
 	}
 
 	public override string getTitle() {

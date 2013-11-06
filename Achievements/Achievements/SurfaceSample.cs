@@ -24,12 +24,14 @@ using UnityEngine;
 class SurfaceSampleFactory : AchievementFactory {
 	public IEnumerable<Achievement> getAchievements() {
 		List<Achievement> achievements = new List<Achievement>();
-		foreach (Body body in Body.LANDABLE) {
-			achievements.Add(new BodySurfaceSample(body));
+		foreach (Body body in Body.ALL_LANDABLE) {
+			achievements.Add(new BodySurfaceSample(body).addon(!body.isStock()));
 		}
 		achievements.AddRange(new Achievement[] {
 			new SurfaceSample(),
-			new AllBodiesSurfaceSample()
+			new AllBodiesSurfaceSample(Body.STOCK_LANDABLE, "Pile of Dirt", "Take surface samples on all planets and moons.", "surfaceSample.allBodies"),
+			new AllBodiesSurfaceSample(Body.SENTAR_LANDABLE, "Another Pile of Dirt", "Take surface samples on all planets and moons in the Sentar system.",
+				"surfaceSample.allBodies.sentar").addon()
 		});
 		return achievements;
 	}
@@ -82,18 +84,26 @@ class BodySurfaceSample : SurfaceSample {
 }
 
 class AllBodiesSurfaceSample : CountingAchievement {
-	private Dictionary<Body, bool> bodies = new Dictionary<Body, bool>();
+	private IEnumerable<Body> bodies;
+	private string title;
+	private string text;
+	private string key;
+	private Dictionary<Body, bool> sampleBodies = new Dictionary<Body, bool>();
 
-	public AllBodiesSurfaceSample() : base(Body.LANDABLE.Count()) {
+	public AllBodiesSurfaceSample(IEnumerable<Body> bodies, string title, string text, string key) : base(bodies.Count()) {
+		this.bodies = bodies;
+		this.title = title;
+		this.text = text;
+		this.key = key;
 	}
 
 	public override void init(ConfigNode node) {
-		foreach (Body body in Body.LANDABLE) {
+		foreach (Body body in bodies) {
 			bool surfaceSample = false;
 			if (node.HasValue(body.name)) {
 				surfaceSample = bool.Parse(node.GetValue(body.name));
 			}
-			bodies.Add(body, surfaceSample);
+			sampleBodies.Add(body, surfaceSample);
 			if (surfaceSample) {
 				increaseCounter();
 			}
@@ -101,12 +111,12 @@ class AllBodiesSurfaceSample : CountingAchievement {
 	}
 
 	public override void save(ConfigNode node) {
-		foreach (Body body in bodies.Keys) {
-			if (bodies[body]) {
+		foreach (Body body in sampleBodies.Keys) {
+			if (sampleBodies[body]) {
 				if (node.HasValue(body.name)) {
 					node.RemoveValue(body.name);
 				}
-				node.AddValue(body.name, bodies[body].ToString());
+				node.AddValue(body.name, sampleBodies[body].ToString());
 			}
 		}
 	}
@@ -114,28 +124,30 @@ class AllBodiesSurfaceSample : CountingAchievement {
 	public override bool check(Vessel vessel) {
 		if ((vessel != null) && vessel.isEVA() && vessel.hasSurfaceSample()) {
 			Body body = vessel.getCurrentBody();
-			if (bodies.ContainsKey(body)) {
-				bodies.Remove(body);
-			}
-			bodies.Add(body, true);
+			if (bodies.Contains(body)) {
+				if (sampleBodies.ContainsKey(body)) {
+					sampleBodies.Remove(body);
+				}
+				sampleBodies.Add(body, true);
 
-			resetCounter();
-			foreach (var x in bodies.Where(kv => kv.Value)) {
-				increaseCounter();
+				resetCounter();
+				foreach (var x in sampleBodies.Where(kv => kv.Value)) {
+					increaseCounter();
+				}
 			}
 		}
 		return base.check(vessel);
 	}
 
 	public override string getTitle() {
-		return "Pile of Dirt";
+		return title;
 	}
 
 	public override string getText() {
-		return "Take surface samples on all planets and moons.";
+		return text;
 	}
 
 	public override string getKey() {
-		return "surfaceSample.allBodies";
+		return key;
 	}
 }

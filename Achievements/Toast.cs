@@ -43,7 +43,7 @@ class Toast {
 
 	public void draw() {
 		GUILayout.BeginArea(rect);
-		new AchievementGUI(achievement, earn).draw(false);
+		new AchievementGUI(achievement, earn).draw(false, false);
 		GUILayout.EndArea();
 
 		if (firstShown == 0L) {

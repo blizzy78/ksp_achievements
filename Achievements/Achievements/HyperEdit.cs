@@ -24,7 +24,7 @@ using UnityEngine;
 class HyperEditFactory : AchievementFactory {
 	public IEnumerable<Achievement> getAchievements() {
 		return new Achievement[] {
-			new HyperEdit()
+			new HyperEdit().addon()
 		};
 	}
 
@@ -74,9 +74,5 @@ class HyperEdit : AchievementBase {
 
 	public override string getKey() {
 		return "stableOrbit.hyperEdit";
-	}
-
-	public override bool isHidden() {
-		return true;
 	}
 }

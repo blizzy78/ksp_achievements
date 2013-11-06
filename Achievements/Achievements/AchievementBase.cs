@@ -22,6 +22,8 @@ using System.Text;
 using UnityEngine;
 
 public abstract class AchievementBase : Achievement {
+	private bool addonAchievement;
+
 	public abstract bool check(Vessel vessel);
 	public abstract string getTitle();
 	public abstract string getText();
@@ -29,6 +31,20 @@ public abstract class AchievementBase : Achievement {
 
 	public virtual bool isHidden() {
 		return false;
+	}
+
+	public virtual bool isAddon() {
+		return addonAchievement;
+	}
+
+	public AchievementBase addon() {
+		this.addonAchievement = true;
+		return this;
+	}
+
+	public AchievementBase addon(bool addonAchievement) {
+		this.addonAchievement = addonAchievement;
+		return this;
 	}
 
 	public virtual void init(ConfigNode node) {

@@ -33,8 +33,12 @@ class AchievementGUI {
 	private AchievementEarn earn;
 	private Texture2D toastTex;
 	private Texture2D toastNotEarnedTex;
+	private Texture2D toastAddonTex;
+	private Texture2D toastAddonNotEarnedTex;
 	private GUIStyle bgStyle;
 	private GUIStyle bgNotEarnedStyle;
+	private GUIStyle bgAddonStyle;
+	private GUIStyle bgAddonNotEarnedStyle;
 	private GUIStyle textStyle;
 	private GUIStyle textNotEarnedStyle;
 	private GUIStyle titleStyle;
@@ -46,6 +50,8 @@ class AchievementGUI {
 
 		toastTex = GameDatabase.Instance.GetTexture("blizzy/Achievements/toast", false);
 		toastNotEarnedTex = GameDatabase.Instance.GetTexture("blizzy/Achievements/toast-not-earned", false);
+		toastAddonTex = GameDatabase.Instance.GetTexture("blizzy/Achievements/toast-addon", false);
+		toastAddonNotEarnedTex = GameDatabase.Instance.GetTexture("blizzy/Achievements/toast-addon-not-earned", false);
 
 		int width = TEX_WIDTH + 300;
 		int height = Screen.height / 2;
@@ -59,6 +65,12 @@ class AchievementGUI {
 		bgNotEarnedStyle.normal.background = toastNotEarnedTex;
 		bgNotEarnedStyle.fixedWidth = TEX_WIDTH;
 		bgNotEarnedStyle.fixedHeight = TEX_HEIGHT;
+
+		bgAddonStyle = new GUIStyle(bgStyle);
+		bgAddonStyle.normal.background = toastAddonTex;
+
+		bgAddonNotEarnedStyle = new GUIStyle(bgNotEarnedStyle);
+		bgAddonNotEarnedStyle.normal.background = toastAddonNotEarnedTex;
 
 		textStyle = new GUIStyle();
 		textStyle.alignment = TextAnchor.MiddleCenter;
@@ -85,9 +97,14 @@ class AchievementGUI {
 		titleNotEarnedStyle.fontStyle = FontStyle.Bold;
 	}
 
-	public void draw(bool showCounter) {
-		GUILayout.BeginVertical((earn != null) ? bgStyle : bgNotEarnedStyle,
-			GUILayout.Width(TEX_WIDTH), GUILayout.Height(TEX_HEIGHT), GUILayout.ExpandWidth(true));
+	public void draw(bool showCounter, bool showAddonIndicator) {
+		GUIStyle bgStyle;
+		if (earn != null) {
+			bgStyle = (showAddonIndicator && achievement.isAddon()) ? bgAddonStyle : this.bgStyle;
+		} else {
+			bgStyle = (showAddonIndicator && achievement.isAddon()) ? bgAddonNotEarnedStyle : bgNotEarnedStyle;
+		}
+		GUILayout.BeginVertical(bgStyle, GUILayout.Width(TEX_WIDTH), GUILayout.Height(TEX_HEIGHT), GUILayout.ExpandWidth(true));
 
 		GUILayout.FlexibleSpace();
 
