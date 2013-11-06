@@ -58,3 +58,11 @@ Don't Move or I'll Chute - Land safely using only parachutes.
 "FIAL" - Have your rocket explode before take-off
 "Are you kidding?" - lose a Kerbal on EVA on the surface of planet (suppose that will be something like rover crashed the kerbal or some other silly situation)
 "That is not the droids we are looking for" - visit a crash site of another rocket after some time past the crash
+
+-------------------------------------------------------------------------------------------------------
+
+- "The wrong tool for the job" land a spaceplane on an airless body;
+- "Boldly go" send something on escape trajectory from the system;
+- "Gemini" orbital rendezvous, and/or docking, definitely;
+- "Fire drill" swap all crew between two vessels in microgravity;
+- "Jebtastic!" return to Kerbin and survive, using only EVA and bouncy helmet.
