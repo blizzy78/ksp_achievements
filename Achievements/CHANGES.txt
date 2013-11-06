@@ -1,4 +1,8 @@
-﻿1.4.3, 2013-10-26
+﻿1.4.4, 2013-11-06
+- Added 32 new achievements (now 126 total.) Almost all of those new achievements are related to
+  Kragrathea's Planet Factory mod.
+
+1.4.3, 2013-10-26
 - The achievement "We're Meant to Be Together" now requires that the craft be in a stable orbit.
 - The achievement "Deep Down the Hole" has been renamed to "Deep Impact".
 - Added 4 new achievements (now 94 total.)

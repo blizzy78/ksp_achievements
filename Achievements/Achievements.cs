@@ -23,7 +23,7 @@ using System.Text;
 using UnityEngine;
 
 public class Achievements : MonoBehaviour {
-	private const long VERSION = 4;
+	private const long VERSION = 5;
 	private const long CHECK_INTERVAL = 1500;
 	private const long SAVE_INTERVAL = 300000;
 	private const float SCIENCE_REWARD = 5;
