@@ -44,6 +44,7 @@ public class Achievements : MonoBehaviour {
 	private WWW versionWWW;
 	private bool? newVersionAvailable = null;
 	private LocationPicker locationPicker;
+	private RenderingManager renderingManager;
 
 	protected void Start() {
 		Debug.LogWarning("Achievements.Start");
@@ -109,6 +110,10 @@ public class Achievements : MonoBehaviour {
 	}
 
 	public void OnGUI() {
+		if (!showGUI()) {
+			return;
+		}
+
 		if ((HighLogic.LoadedScene == GameScenes.SPACECENTER) ||
 			HighLogic.LoadedSceneHasPlanetarium ||
 			((FlightGlobals.fetch != null) && (FlightGlobals.ActiveVessel != null)) ||
@@ -139,6 +144,19 @@ public class Achievements : MonoBehaviour {
 
 		if (locationPicker != null) {
 			locationPicker.draw();
+		}
+	}
+
+	private bool showGUI() {
+		if (renderingManager == null) {
+			renderingManager = (RenderingManager) GameObject.FindObjectOfType(typeof(RenderingManager));
+		}
+
+		if (renderingManager != null) {
+			GameObject o = renderingManager.uiElementsToDisable.FirstOrDefault();
+			return (o == null) || o.activeSelf;
+		} else {
+			return false;
 		}
 	}
 
