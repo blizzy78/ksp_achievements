@@ -66,3 +66,10 @@ Don't Move or I'll Chute - Land safely using only parachutes.
 - "Gemini" orbital rendezvous, and/or docking, definitely;
 - "Fire drill" swap all crew between two vessels in microgravity;
 - "Jebtastic!" return to Kerbin and survive, using only EVA and bouncy helmet.
+
+-------------------------------------------------------------------------------------------------------
+
+"Ion't know how you did that" -Land using only ion engines (ie: Gilly or Minmus)
+"Three mile lander" -land on an atmospheric body using only nuclear engine thrust
+"The longest walk" -walk/run a kerbal 1(+?)km on his own little two feet
+"REPORT: DAMAGE MINIMAL" -collide a craft with one of the buildings at KSC2
