@@ -24,7 +24,7 @@ using UnityEngine;
 class LaunchFactory : AchievementFactory {
 	public IEnumerable<Achievement> getAchievements() {
 		return new Achievement[] {
-			new Launch(1, "Up, Up and Away"),
+			new Launch(1, "Up, Up, and Away"),
 			new Launch(10, "10 Launches"),
 			new Launch(100, "100 Launches"),
 			new Launch(1000, "1000 Launches")
