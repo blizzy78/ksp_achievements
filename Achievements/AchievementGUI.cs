@@ -23,11 +23,18 @@ using UnityEngine;
 
 class AchievementGUI {
 	public static readonly int TEX_WIDTH = 340;
-	public static readonly int TEX_HEIGHT = 95;
+	public static readonly int TEX_HEIGHT = 75;
+	public static readonly int TEX_BORDER = 10;
+	public static readonly int EXPANDED_INSET = 50;
 
-	private const int FONT_SIZE = 13;
-	private const int TITLE_FONT_SIZE = 15;
-	private const int TEXT_MARGIN = 20;
+	private static readonly int TEX_HEIGHT_EXPANSION = 32;
+
+	private static readonly int FONT_SIZE = 13;
+	private static readonly int TITLE_FONT_SIZE = 15;
+	private static readonly int FONT_SIZE_EXPANSION = 11;
+	private static readonly int TEXT_MARGIN = TEX_BORDER * 2;
+
+	public Callback clickCallback;
 
 	private Achievement achievement;
 	private AchievementEarn earn;
@@ -35,14 +42,21 @@ class AchievementGUI {
 	private Texture2D toastNotEarnedTex;
 	private Texture2D toastAddonTex;
 	private Texture2D toastAddonNotEarnedTex;
+	private Texture2D toastExpandedTex;
+	private Texture2D toastAddonExpandedTex;
 	private GUIStyle bgStyle;
 	private GUIStyle bgNotEarnedStyle;
 	private GUIStyle bgAddonStyle;
 	private GUIStyle bgAddonNotEarnedStyle;
+	private GUIStyle bgExpandedStyle;
+	private GUIStyle bgAddonExpandedStyle;
 	private GUIStyle textStyle;
 	private GUIStyle textNotEarnedStyle;
+	private GUIStyle textExpansionStyle;
 	private GUIStyle titleStyle;
 	private GUIStyle titleNotEarnedStyle;
+	private bool hover;
+	private bool mouseDown;
 
 	public AchievementGUI(Achievement achievement, AchievementEarn earn) {
 		this.achievement = achievement;
@@ -52,6 +66,8 @@ class AchievementGUI {
 		toastNotEarnedTex = GameDatabase.Instance.GetTexture("blizzy/Achievements/toast-not-earned", false);
 		toastAddonTex = GameDatabase.Instance.GetTexture("blizzy/Achievements/toast-addon", false);
 		toastAddonNotEarnedTex = GameDatabase.Instance.GetTexture("blizzy/Achievements/toast-addon-not-earned", false);
+		toastExpandedTex = GameDatabase.Instance.GetTexture("blizzy/Achievements/toast-expanded", false);
+		toastAddonExpandedTex = GameDatabase.Instance.GetTexture("blizzy/Achievements/toast-addon-expanded", false);
 
 		int width = TEX_WIDTH + 300;
 		int height = Screen.height / 2;
@@ -59,18 +75,26 @@ class AchievementGUI {
 		bgStyle = new GUIStyle();
 		bgStyle.normal.background = toastTex;
 		bgStyle.fixedWidth = TEX_WIDTH;
-		bgStyle.fixedHeight = TEX_HEIGHT;
+		bgStyle.fixedHeight = TEX_HEIGHT + TEX_BORDER * 2;
 
 		bgNotEarnedStyle = new GUIStyle();
 		bgNotEarnedStyle.normal.background = toastNotEarnedTex;
 		bgNotEarnedStyle.fixedWidth = TEX_WIDTH;
-		bgNotEarnedStyle.fixedHeight = TEX_HEIGHT;
+		bgNotEarnedStyle.fixedHeight = TEX_HEIGHT + TEX_BORDER * 2;
 
 		bgAddonStyle = new GUIStyle(bgStyle);
 		bgAddonStyle.normal.background = toastAddonTex;
 
 		bgAddonNotEarnedStyle = new GUIStyle(bgNotEarnedStyle);
 		bgAddonNotEarnedStyle.normal.background = toastAddonNotEarnedTex;
+
+		bgExpandedStyle = new GUIStyle(bgStyle);
+		bgExpandedStyle.normal.background = toastExpandedTex;
+		bgExpandedStyle.fixedHeight = TEX_HEIGHT + TEX_HEIGHT_EXPANSION + TEX_BORDER * 2;
+
+		bgAddonExpandedStyle = new GUIStyle(bgStyle);
+		bgAddonExpandedStyle.normal.background = toastAddonExpandedTex;
+		bgAddonExpandedStyle.fixedHeight = TEX_HEIGHT + TEX_HEIGHT_EXPANSION + TEX_BORDER * 2;
 
 		textStyle = new GUIStyle();
 		textStyle.alignment = TextAnchor.MiddleCenter;
@@ -88,6 +112,10 @@ class AchievementGUI {
 		textNotEarnedStyle.wordWrap = true;
 		textNotEarnedStyle.fixedWidth = TEX_WIDTH;
 
+		textExpansionStyle = new GUIStyle(textStyle);
+		textExpansionStyle.fontSize = FONT_SIZE_EXPANSION;
+		textExpansionStyle.fixedWidth = TEX_WIDTH - EXPANDED_INSET;
+
 		titleStyle = new GUIStyle(textStyle);
 		titleStyle.fontSize = TITLE_FONT_SIZE;
 		titleStyle.fontStyle = FontStyle.Bold;
@@ -97,17 +125,25 @@ class AchievementGUI {
 		titleNotEarnedStyle.fontStyle = FontStyle.Bold;
 	}
 
-	public void draw(bool showCounter, bool showAddonIndicator) {
+	public void draw(bool showCounter, bool showAddonIndicator, bool expanded) {
+		if (earn == null) {
+			expanded = false;
+		}
+
 		GUIStyle bgStyle;
 		if (earn != null) {
-			bgStyle = (showAddonIndicator && achievement.isAddon()) ? bgAddonStyle : this.bgStyle;
+			bgStyle = (showAddonIndicator && achievement.isAddon()) ? (expanded ? bgAddonExpandedStyle : bgAddonStyle) : (expanded ? bgExpandedStyle : this.bgStyle);
 		} else {
 			bgStyle = (showAddonIndicator && achievement.isAddon()) ? bgAddonNotEarnedStyle : bgNotEarnedStyle;
 		}
-		GUILayout.BeginVertical(bgStyle, GUILayout.Width(TEX_WIDTH), GUILayout.Height(TEX_HEIGHT), GUILayout.ExpandWidth(true));
+		GUILayout.BeginVertical(bgStyle, GUILayout.Width(TEX_WIDTH),
+			GUILayout.Height(TEX_HEIGHT + TEX_BORDER * 2 + (expanded ? TEX_HEIGHT_EXPANSION : 0)),
+			GUILayout.ExpandWidth(true));
 
+		GUILayout.Space(TEX_BORDER);
+
+		GUILayout.BeginVertical(GUIStyle.none, GUILayout.Width(TEX_WIDTH), GUILayout.Height(TEX_HEIGHT), GUILayout.ExpandWidth(true));
 		GUILayout.FlexibleSpace();
-
 		GUILayout.Label(achievement.getTitle(), (earn != null) ? titleStyle : titleNotEarnedStyle,
 			GUILayout.Width(TEX_WIDTH), GUILayout.ExpandWidth(true));
 		GUILayout.Space(5);
@@ -120,11 +156,44 @@ class AchievementGUI {
 				text += " (" + count.ToString("D0") + "/" + minRequired.ToString("D0") + ")";
 			}
 		}
-		GUILayout.Label(text, (earn != null) ? textStyle : textNotEarnedStyle,
-			GUILayout.Width(TEX_WIDTH), GUILayout.ExpandWidth(true));
-
+		GUILayout.Label(text, (earn != null) ? textStyle : textNotEarnedStyle, GUILayout.Width(TEX_WIDTH), GUILayout.ExpandWidth(true));
 		GUILayout.FlexibleSpace();
+		GUILayout.EndVertical();
+
+		if (expanded) {
+			GUILayout.BeginVertical(GUIStyle.none, GUILayout.Width(TEX_WIDTH), GUILayout.Height(TEX_HEIGHT_EXPANSION), GUILayout.ExpandWidth(true));
+			GUILayout.FlexibleSpace();
+			GUILayout.BeginHorizontal(GUIStyle.none);
+			GUILayout.Space(EXPANDED_INSET);
+			string flightName = (earn.flightName == Achievements.UNKNOWN_VESSEL) ? "Unknown vessel" : earn.flightName;
+			string date = new DateTime(earn.time * 10000).ToShortDateString();
+			GUILayout.Label(flightName + ", " + date, textExpansionStyle, GUILayout.Width(TEX_WIDTH - EXPANDED_INSET), GUILayout.ExpandWidth(true));
+			GUILayout.EndHorizontal();
+			GUILayout.FlexibleSpace();
+			GUILayout.EndVertical();
+		}
+
+		GUILayout.Space(TEX_BORDER);
 
 		GUILayout.EndVertical();
+
+		if (Event.current.type == EventType.Repaint) {
+			hover = GUILayoutUtility.GetLastRect().Contains(Event.current.mousePosition);
+		}
+	}
+
+	public void update() {
+		if (hover && (clickCallback != null)) {
+			if (Input.GetMouseButtonDown(0)) {
+				mouseDown = true;
+			}
+
+			if (mouseDown && Input.GetMouseButtonUp(0)) {
+				mouseDown = false;
+				clickCallback.Invoke();
+			}
+		} else {
+			mouseDown = false;
+		}
 	}
 }

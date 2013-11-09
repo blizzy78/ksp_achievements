@@ -23,13 +23,15 @@ using System.Text;
 using UnityEngine;
 
 public class Achievements : MonoBehaviour {
+	public const string UNKNOWN_VESSEL = "unknown";
+
 	private const long VERSION = 5;
 	private const long CHECK_INTERVAL = 1500;
 	private const long SAVE_INTERVAL = 300000;
 	private const float SCIENCE_REWARD = 5;
 
 	// debugging
-	private const bool SHOW_ACHIEVEMENTS_IN_MENU = false;
+	private const bool SHOW_ACHIEVEMENTS_IN_MENU = true;
 	private const bool SHOW_LOCATION_PICKER_BUTTON = false;
 
 	private Dictionary<Category, IEnumerable<Achievement>> achievements;
@@ -76,7 +78,7 @@ public class Achievements : MonoBehaviour {
 					if (achievement.check(vessel)) {
 						string key = achievement.getKey();
 						Debug.Log("achievement earned: " + key);
-						AchievementEarn earn = new AchievementEarn(now, (vessel != null) ? vessel.vesselName : "unknown");
+						AchievementEarn earn = new AchievementEarn(now, (vessel != null) ? vessel.vesselName : Achievements.UNKNOWN_VESSEL);
 						earnedAchievements.Add(achievement, earn);
 
 						forceSave = true;
@@ -106,6 +108,10 @@ public class Achievements : MonoBehaviour {
 			checkForNewVersion();
 
 			lastCheck = now;
+		}
+
+		if (achievementsWindow != null) {
+			achievementsWindow.update();
 		}
 	}
 
@@ -257,7 +263,7 @@ public class Achievements : MonoBehaviour {
 			string time = value.value;
 			ConfigNode legacyNode = new ConfigNode(key);
 			legacyNode.AddValue("time", time);
-			legacyNode.AddValue("flight", "unknown");
+			legacyNode.AddValue("flight", Achievements.UNKNOWN_VESSEL);
 			legacyNodes.Add(legacyNode);
 		}
 		foreach (ConfigNode legacyNode in legacyNodes) {

@@ -33,6 +33,8 @@ class AchievementsWindow {
 	private Rect rect;
 	private Category selectedCategory;
 	private Vector2 achievementsScrollPos;
+	private Dictionary<Achievement, AchievementGUI> achievementGuis = new Dictionary<Achievement, AchievementGUI>();
+	private Achievement expandedAchievement;
 
 	public AchievementsWindow(Dictionary<Category, IEnumerable<Achievement>> achievements,
 		Dictionary<Achievement, AchievementEarn> earnedAchievements, bool newVersionAvailable) {
@@ -131,13 +133,35 @@ class AchievementsWindow {
 
 			AchievementEarn earn = earnedAchievements.ContainsKey(achievement) ? earnedAchievements[achievement] : null;
 			if ((earn != null) || !achievement.isHidden()) {
-				drawAchievement(achievement, earn);
+				AchievementGUI gui = null;
+				if (achievementGuis.ContainsKey(achievement)) {
+					gui = achievementGuis[achievement];
+				} else {
+					gui = new AchievementGUI(achievement, earn);
+					gui.clickCallback = () => {
+						achievementClicked(achievement);
+					};
+
+					achievementGuis.Add(achievement, gui);
+				}
+
+				if (gui != null) {
+					gui.draw(true, true, achievement == expandedAchievement);
+				}
 			}
 		}
 		GUILayout.EndScrollView();
 	}
 
-	private void drawAchievement(Achievement achievement, AchievementEarn earn) {
-		new AchievementGUI(achievement, earn).draw(true, true);
+	public void update() {
+		foreach (AchievementGUI gui in achievementGuis.Values) {
+			gui.update();
+		}
+	}
+
+	private void achievementClicked(Achievement achievement) {
+		if (earnedAchievements.ContainsKey(achievement)) {
+			expandedAchievement = achievement;
+		}
 	}
 }
