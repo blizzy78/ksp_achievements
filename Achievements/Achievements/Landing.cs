@@ -69,20 +69,20 @@ class LandingFactory : AchievementFactory {
 				new Location(Body.MUN, 61.936.north(), 32.985.west(), 48000),
 				new Location(Body.MUN, 2.063.north(), 56.534.west(), 39000),
 				new Location(Body.MUN, 5.672.north(), 151.283.west(), 37000)
-			}, "Deep Impact", "Land inside one of the big craters on the Mun.", "landing.mun.crater", false),
-			new BodyLanding(Body.KERBIN, false, true, -1, new Location[] { Location.KSC }, "Home Sweet Home", "Land at the Kerbal Space Center.", "landing.ksc", false),
+			}, "Deep Impact", "Land inside one of the big craters on the Mun.", "landing.mun.crater"),
+			new BodyLanding(Body.KERBIN, false, true, -1, new Location[] { Location.KSC }, "Home Sweet Home", "Land at the Kerbal Space Center.", "landing.ksc"),
 			new BodyLanding(Body.KERBIN, false, true, -1, new Location[] { Location.KERBIN_NORTH_POLE, Location.KERBIN_SOUTH_POLE },
-				"I'm Freezing Out Here", "Land on the north or south pole of Kerbin.", "landing.kerbin.pole", false),
+				"I'm Freezing Out Here", "Land on the north or south pole of Kerbin.", "landing.kerbin.pole"),
 			new BodyLanding(Body.KERBIN, false, false, 10000, new Location[] { Location.KSC_LAUNCH_PAD },
-				"Grasshopper", "Land on the Kerbal Space Center launch pad from an altitude of at least 10000 m.", "landing.kscLaunchPad", false),
+				"Grasshopper", "Land on the Kerbal Space Center launch pad from an altitude of at least 10000 m.", "landing.kscLaunchPad"),
 			new BodyLanding(Body.KERBIN, false, false, 10000, new Location[] { Location.KSC_HELICOPTER_PAD },
-				"Chopper License", "Land on the Kerbal Space Center helicopter pad from an altitude of at least 10000 m.", "landing.kscHelicopterPad", false),
+				"Chopper License", "Land on the Kerbal Space Center helicopter pad from an altitude of at least 10000 m.", "landing.kscHelicopterPad"),
 			new BodyLanding(Body.KERBIN, false, false, 10000, new Location[] { Location.KSC_RUNWAY },
-				"Pilot License", "Land on the Kerbal Space Center runway from an altitude of at least 10000 m.", "landing.kscRunway", false),
+				"Pilot License", "Land on the Kerbal Space Center runway from an altitude of at least 10000 m.", "landing.kscRunway"),
 			new BodyLanding(Body.KERBIN, false, false, 10000, new Location[] { Location.ISLAND_RUNWAY },
-				"Not As Bad As It Looks", "Land on the island runway from an altitude of at least 10000 m.", "landing.islandRunway", true),
+				"Not As Bad As It Looks", "Land on the island runway from an altitude of at least 10000 m.", "landing.islandRunway"),
 			new BodyLanding(Body.MUN, false, true, -1, new Location[] { Location.ARMSTRONG_MEMORIAL },
-				"First... Not", "Land at the Armstrong Memorial.", "landing.armstrongMemorial", true)
+				"First... Not", "Land at the Armstrong Memorial.", "landing.armstrongMemorial").hide()
 		});
 
 		return achievements;
@@ -96,18 +96,13 @@ class LandingFactory : AchievementFactory {
 class Landing : AchievementBase {
 	private bool stableOrbit;
 	private double minAltitude;
-	private bool hidden;
 	private bool flyingStep;
 	private bool stableOrbitStep;
 	private bool minAltitudeStep;
 
-	public Landing(bool stableOrbit, double minAltitude) : this(stableOrbit, minAltitude, false) {
-	}
-
-	public Landing(bool stableOrbit, double minAltitude, bool hidden) {
+	public Landing(bool stableOrbit, double minAltitude) {
 		this.stableOrbit = stableOrbit;
 		this.minAltitude = minAltitude;
-		this.hidden = hidden;
 
 		registerOnVesselChange(reset);
 	}
@@ -148,10 +143,6 @@ class Landing : AchievementBase {
 	public override string getKey() {
 		return "landing";
 	}
-
-	public override bool isHidden() {
-		return hidden;
-	}
 }
 
 class BodyLanding : Landing {
@@ -164,15 +155,15 @@ class BodyLanding : Landing {
 
 	public BodyLanding(Body body, bool splash, string title) : this(body, splash, false, -1, new Location[0], title,
 		splash ? "Splash into an ocean on the surface of " + body.theName + "." : "Land on the surface of " + body.theName + ".",
-		splash ? "landing.splash." + body.name : "landing." + body.name, false) {
+		splash ? "landing.splash." + body.name : "landing." + body.name) {
 
 		this.body = body;
 		this.splash = splash;
 		this.title = title;
 	}
 
-	public BodyLanding(Body body, bool splash, bool stableOrbit, double minAltitude, IEnumerable<Location> locations, string title, string text, string key, bool hidden)
-		: base(stableOrbit, minAltitude, hidden) {
+	public BodyLanding(Body body, bool splash, bool stableOrbit, double minAltitude, IEnumerable<Location> locations, string title, string text, string key)
+		: base(stableOrbit, minAltitude) {
 
 		this.body = body;
 		this.splash = splash;

@@ -28,7 +28,7 @@ class KillFactory : AchievementFactory {
 			new Kill(10, "Bloodbath", "Kill 10 crew members in a single incident.", true),
 			new Kill(10, "Careless", "Kill 10 crew members.", false),
 			new Kill(100, "Death Trap", "Kill 100 crew members.", false),
-			new KillJebediahAgain()
+			new KillJebediahAgain().hide()
 		};
 	}
 
@@ -115,9 +115,5 @@ class KillJebediahAgain : CountingAchievement {
 
 	public override string getKey() {
 		return "kill.jebediahAgain";
-	}
-
-	public override bool isHidden() {
-		return true;
 	}
 }

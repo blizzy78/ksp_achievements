@@ -22,6 +22,7 @@ using System.Text;
 using UnityEngine;
 
 public abstract class AchievementBase : Achievement {
+	private bool hidden;
 	private bool addonAchievement;
 
 	public abstract bool check(Vessel vessel);
@@ -29,8 +30,13 @@ public abstract class AchievementBase : Achievement {
 	public abstract string getText();
 	public abstract string getKey();
 
-	public virtual bool isHidden() {
-		return false;
+	public bool isHidden() {
+		return hidden;
+	}
+
+	public AchievementBase hide() {
+		hidden = true;
+		return this;
 	}
 
 	public virtual bool isAddon() {
