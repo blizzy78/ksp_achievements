@@ -34,7 +34,8 @@ class OrbitFactory : AchievementFactory {
 			new MoonOrbit(),
 			new KesslerSyndrome(),
 			new SSTO(),
-			new JetPackOrbit()
+			new JetPackOrbit(),
+			new SunEscapeTrajectory()
 		});
 		return achievements;
 	}
@@ -252,5 +253,24 @@ class JetPackOrbit : OrbitAchievement {
 
 	public override string getKey() {
 		return "stableOrbit.jetPack";
+	}
+}
+
+class SunEscapeTrajectory : AchievementBase {
+	public override bool check(Vessel vessel) {
+		return (vessel != null) && vessel.getCurrentBody().Equals(Body.SUN) &&
+			(vessel.orbit.eccentricity >= 1d);
+	}
+
+	public override string getTitle() {
+		return "One Way Trip";
+	}
+
+	public override string getText() {
+		return "Get into an escape trajectory out of the Sun's sphere of influence.";
+	}
+
+	public override string getKey() {
+		return "orbit.escapeSun";
 	}
 }

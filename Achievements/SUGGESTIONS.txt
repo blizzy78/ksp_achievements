@@ -1,12 +1,4 @@
-﻿Speed record: Reached 10,000m/s in a vessel.
-Flash! Ah-AH! Kerbal of the Universe!: Reached 30,000m/s - 0.01% speed of light.
-Is this even possible?: Reached 300,000m/s - 0.1% speed of light.
-Oh my God. What? - Reached 300,000,000m/s (speed of light).
-
-Stoopid Speed Record: Reached 1000m/s during EVA.
-Open the pod bay do-WAAAGH! - Achieved Kerbol escape trajectory whilst EVA.
-
-Lag times/What IS this?/Miracle of laggineering: 300/500/750 part vessel/station.
+﻿Lag times/What IS this?/Miracle of laggineering: 300/500/750 part vessel/station.
 
 Voyager: Send a Kerbal on a Kerbol escape trajectory with 10,000m/s dV left.
 Colony ship: Send 10 Kerbals in one vessel on a Voyager trajectory.
@@ -32,7 +24,6 @@ Going quietly sane: An individual Kerbal in space continuously for a year.
 
 -------------------------------------------------------------------------------------------------------
 
-One Way Trip: Reach solar escape trajectory
 Emissary To The Stars: Reach 250 million km out on solar escape
 
 -------------------------------------------------------------------------------------------------------
@@ -48,7 +39,6 @@ Don't Move or I'll Chute - Land safely using only parachutes.
 
 -"I have no memory of this place" - land at KSC2
 -"Dejavu" - Walk into the hangar on the island airfield(where the old stock parts are)
--"I'll be back" - Sun escape velocity with no fuel left
 
 -------------------------------------------------------------------------------------------------------
 
@@ -62,10 +52,8 @@ Don't Move or I'll Chute - Land safely using only parachutes.
 -------------------------------------------------------------------------------------------------------
 
 - "The wrong tool for the job" land a spaceplane on an airless body;
-- "Boldly go" send something on escape trajectory from the system;
 - "Gemini" orbital rendezvous, and/or docking, definitely;
 - "Fire drill" swap all crew between two vessels in microgravity;
-- "Jebtastic!" return to Kerbin and survive, using only EVA and bouncy helmet.
 
 -------------------------------------------------------------------------------------------------------
 
