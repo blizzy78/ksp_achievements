@@ -1,4 +1,4 @@
-﻿1.4.5
+﻿1.4.5, 2013-11-09
 - You can now click on achievements in the list to see when they were earned, and with which vessel.
 - The plugin's UI does now properly hide if the player wants to hide all UI (via F2 key.)
 - Added 1 new achievement (now 127 total.)

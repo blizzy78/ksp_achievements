@@ -25,13 +25,13 @@ using UnityEngine;
 public class Achievements : MonoBehaviour {
 	public const string UNKNOWN_VESSEL = "unknown";
 
-	private const long VERSION = 5;
+	private const long VERSION = 6;
 	private const long CHECK_INTERVAL = 1500;
 	private const long SAVE_INTERVAL = 300000;
 	private const float SCIENCE_REWARD = 5;
 
 	// debugging
-	private const bool SHOW_ACHIEVEMENTS_IN_MENU = true;
+	private const bool SHOW_ACHIEVEMENTS_IN_MENU = false;
 	private const bool SHOW_LOCATION_PICKER_BUTTON = false;
 
 	private Dictionary<Category, IEnumerable<Achievement>> achievements;
