@@ -62,7 +62,7 @@ class LandingFactory : AchievementFactory {
 				"That Was Close", "Abort a launch and land with all crew members still alive.", "landing.allCrewAlive.abort"),
 			new EnginesDestroyedLanding(),
 
-			new BodyLanding(Body.MUN, false, true, -1, new Location[] {
+			new BodyLanding(Body.MUN, false, true, -1, -1, new Location[] {
 				new Location(Body.MUN, 10.886.south(), 81.182.east(), 44000),
 				new Location(Body.MUN, 11.260.north(), 22.229.east(), 54000),
 				new Location(Body.MUN, 38.988.south(), 4.574.east(), 42000),
@@ -70,19 +70,22 @@ class LandingFactory : AchievementFactory {
 				new Location(Body.MUN, 2.063.north(), 56.534.west(), 39000),
 				new Location(Body.MUN, 5.672.north(), 151.283.west(), 37000)
 			}, "Deep Impact", "Land inside one of the big craters on the Mun.", "landing.mun.crater"),
-			new BodyLanding(Body.KERBIN, false, true, -1, new Location[] { Location.KSC }, "Home Sweet Home", "Land at the Kerbal Space Center.", "landing.ksc"),
-			new BodyLanding(Body.KERBIN, false, true, -1, new Location[] { Location.KERBIN_NORTH_POLE, Location.KERBIN_SOUTH_POLE },
+			new BodyLanding(Body.KERBIN, false, true, -1, -1, new Location[] { Location.KSC }, "Home Sweet Home", "Land at the Kerbal Space Center.", "landing.ksc"),
+			new BodyLanding(Body.KERBIN, false, true, -1, -1, new Location[] { Location.KERBIN_NORTH_POLE, Location.KERBIN_SOUTH_POLE },
 				"I'm Freezing Out Here", "Land on the north or south pole of Kerbin.", "landing.kerbin.pole"),
-			new BodyLanding(Body.KERBIN, false, false, 10000, new Location[] { Location.KSC_LAUNCH_PAD },
+			new BodyLanding(Body.KERBIN, false, false, 10000, -1, new Location[] { Location.KSC_LAUNCH_PAD },
 				"Grasshopper", "Land on the Kerbal Space Center launch pad from an altitude of at least 10000 m.", "landing.kscLaunchPad"),
-			new BodyLanding(Body.KERBIN, false, false, 10000, new Location[] { Location.KSC_HELICOPTER_PAD },
+			new BodyLanding(Body.KERBIN, false, false, 10000, -1, new Location[] { Location.KSC_HELICOPTER_PAD },
 				"Chopper License", "Land on the Kerbal Space Center helicopter pad from an altitude of at least 10000 m.", "landing.kscHelicopterPad"),
-			new BodyLanding(Body.KERBIN, false, false, 10000, new Location[] { Location.KSC_RUNWAY },
+			new BodyLanding(Body.KERBIN, false, false, 10000, -1, new Location[] { Location.KSC_RUNWAY },
 				"Pilot License", "Land on the Kerbal Space Center runway from an altitude of at least 10000 m.", "landing.kscRunway"),
-			new BodyLanding(Body.KERBIN, false, false, 10000, new Location[] { Location.ISLAND_RUNWAY },
+			new BodyLanding(Body.KERBIN, false, false, 10000, -1, new Location[] { Location.ISLAND_RUNWAY },
 				"Not As Bad As It Looks", "Land on the island runway from an altitude of at least 10000 m.", "landing.islandRunway"),
-			new BodyLanding(Body.MUN, false, true, -1, new Location[] { Location.ARMSTRONG_MEMORIAL },
-				"First... Not", "Land at the Armstrong Memorial.", "landing.armstrongMemorial").hide()
+			new BodyLanding(Body.MUN, false, true, -1, -1, new Location[] { Location.ARMSTRONG_MEMORIAL },
+				"First... Not", "Land at the Armstrong Memorial.", "landing.armstrongMemorial").hide(),
+
+			new BodyLanding(Body.INACCESSABLE, false, true, -1, 5, new Location[0], "I See What You Did There",
+				"Land near the equator on Inaccessable.", "landing.inaccessable.equator").addon()
 		});
 
 		return achievements;
@@ -148,12 +151,13 @@ class Landing : AchievementBase {
 class BodyLanding : Landing {
 	private Body body;
 	private bool splash;
+	private double maxDegreesLatitudeFromEquator;
 	private IEnumerable<Location> locations;
 	private string title;
 	private string text;
 	private string key;
 
-	public BodyLanding(Body body, bool splash, string title) : this(body, splash, false, -1, new Location[0], title,
+	public BodyLanding(Body body, bool splash, string title) : this(body, splash, false, -1, -1, new Location[0], title,
 		splash ? "Splash into an ocean on the surface of " + body.theName + "." : "Land on the surface of " + body.theName + ".",
 		splash ? "landing.splash." + body.name : "landing." + body.name) {
 
@@ -162,11 +166,12 @@ class BodyLanding : Landing {
 		this.title = title;
 	}
 
-	public BodyLanding(Body body, bool splash, bool stableOrbit, double minAltitude, IEnumerable<Location> locations, string title, string text, string key)
-		: base(stableOrbit, minAltitude) {
+	public BodyLanding(Body body, bool splash, bool stableOrbit, double minAltitude, double maxDegreesLatitudeFromEquator,
+		IEnumerable<Location> locations, string title, string text, string key) : base(stableOrbit, minAltitude) {
 
 		this.body = body;
 		this.splash = splash;
+		this.maxDegreesLatitudeFromEquator = maxDegreesLatitudeFromEquator;
 		this.locations = locations;
 		this.title = title;
 		this.text = text;
@@ -177,6 +182,7 @@ class BodyLanding : Landing {
 		return base.check(vessel) &&
 			vessel.getCurrentBody().Equals(body) &&
 			(splash ? vessel.isSplashed() : vessel.isLanded()) &&
+			((maxDegreesLatitudeFromEquator < 0) || (Math.Abs(vessel.latitude) <= maxDegreesLatitudeFromEquator)) &&
 			isAtLocation(vessel);
 	}
 
