@@ -23,7 +23,7 @@ using System.Text;
 using UnityEngine;
 
 [KSPAddonFixed(KSPAddon.Startup.MainMenu, true, typeof(Immortalizer))]
-public class Immortalizer : MonoBehaviour {
+class Immortalizer : MonoBehaviour {
 	private static bool immortalized;
 
 	public Immortalizer() {

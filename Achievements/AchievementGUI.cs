@@ -38,6 +38,7 @@ class AchievementGUI {
 
 	private Achievement achievement;
 	private AchievementEarn earn;
+	private bool addon;
 	private Texture2D toastTex;
 	private Texture2D toastNotEarnedTex;
 	private Texture2D toastAddonTex;
@@ -61,6 +62,9 @@ class AchievementGUI {
 	public AchievementGUI(Achievement achievement, AchievementEarn earn) {
 		this.achievement = achievement;
 		this.earn = earn;
+
+		// achievements from other assemblies are always addons
+		addon = achievement.isAddon() || !achievement.GetType().Assembly.Equals(typeof(Achievements).Assembly);
 
 		toastTex = GameDatabase.Instance.GetTexture("blizzy/Achievements/toast", false);
 		toastNotEarnedTex = GameDatabase.Instance.GetTexture("blizzy/Achievements/toast-not-earned", false);
@@ -132,9 +136,9 @@ class AchievementGUI {
 
 		GUIStyle bgStyle;
 		if (earn != null) {
-			bgStyle = (showAddonIndicator && achievement.isAddon()) ? (expanded ? bgAddonExpandedStyle : bgAddonStyle) : (expanded ? bgExpandedStyle : this.bgStyle);
+			bgStyle = (showAddonIndicator && addon) ? (expanded ? bgAddonExpandedStyle : bgAddonStyle) : (expanded ? bgExpandedStyle : this.bgStyle);
 		} else {
-			bgStyle = (showAddonIndicator && achievement.isAddon()) ? bgAddonNotEarnedStyle : bgNotEarnedStyle;
+			bgStyle = (showAddonIndicator && addon) ? bgAddonNotEarnedStyle : bgNotEarnedStyle;
 		}
 		GUILayout.BeginVertical(bgStyle, GUILayout.Width(TEX_WIDTH),
 			GUILayout.Height(TEX_HEIGHT + TEX_BORDER * 2 + (expanded ? TEX_HEIGHT_EXPANSION : 0)),

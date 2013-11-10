@@ -23,6 +23,7 @@ using System.Text;
 public interface Achievement {
 	void init(ConfigNode node);
 	void save(ConfigNode node);
+	void update();
 	bool check(Vessel vessel);
 	string getTitle();
 	string getText();

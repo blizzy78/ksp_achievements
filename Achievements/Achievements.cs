@@ -22,7 +22,7 @@ using System.Reflection;
 using System.Text;
 using UnityEngine;
 
-public class Achievements : MonoBehaviour {
+class Achievements : MonoBehaviour {
 	public const string UNKNOWN_VESSEL = "unknown";
 
 	private const long VERSION = 6;
@@ -35,6 +35,7 @@ public class Achievements : MonoBehaviour {
 	private const bool SHOW_LOCATION_PICKER_BUTTON = false;
 
 	private Dictionary<Category, IEnumerable<Achievement>> achievements;
+	private List<Achievement> achievementsList;
 	private long lastCheck = 0;
 	private Dictionary<Achievement, AchievementEarn> earnedAchievements;
 	private AudioClip achievementEarnedClip;
@@ -54,6 +55,7 @@ public class Achievements : MonoBehaviour {
 		versionWWW = new WWW("http://blizzy.de/achievements/version.txt");
 
 		achievements = getAchievements();
+		achievementsList = getAchievementsList();
 		earnedAchievements = loadEarnedAchievements();
 
 		achievementEarnedClip = GameDatabase.Instance.GetAudioClip("blizzy/Achievements/achievement");
@@ -68,23 +70,52 @@ public class Achievements : MonoBehaviour {
 	}
 
 	public void Update() {
+		updateAchievements();
+		checkAchievements();
+
+		if (achievementsWindow != null) {
+			achievementsWindow.update();
+		}
+	}
+
+	private void updateAchievements() {
+		if (achievementsList != null) {
+			foreach (Achievement achievement in achievementsList) {
+				try {
+					achievement.update();
+				} catch (Exception e) {
+					Debug.LogException(e);
+				}
+			}
+		}
+	}
+
+	private void checkAchievements() {
+		if (achievementsList == null) {
+			return;
+		}
+
 		long now = DateTime.UtcNow.Ticks / 10000;
 		if ((now - lastCheck) >= CHECK_INTERVAL) {
 			bool forceSave = false;
 
-			foreach (Achievement achievement in getAchievementsList()) {
+			foreach (Achievement achievement in achievementsList) {
 				if (!earnedAchievements.ContainsKey(achievement)) {
 					Vessel vessel = (FlightGlobals.fetch != null) ? FlightGlobals.ActiveVessel : null;
-					if (achievement.check(vessel)) {
-						string key = achievement.getKey();
-						Debug.Log("achievement earned: " + key);
-						AchievementEarn earn = new AchievementEarn(now, (vessel != null) ? vessel.vesselName : Achievements.UNKNOWN_VESSEL);
-						earnedAchievements.Add(achievement, earn);
+					try {
+						if (achievement.check(vessel)) {
+							string key = achievement.getKey();
+							Debug.Log("achievement earned: " + key);
+							AchievementEarn earn = new AchievementEarn(now, (vessel != null) ? vessel.vesselName : Achievements.UNKNOWN_VESSEL);
+							earnedAchievements.Add(achievement, earn);
 
-						forceSave = true;
+							forceSave = true;
 
-						// queue for later display
-						queuedEarnedAchievements.Add(achievement);
+							// queue for later display
+							queuedEarnedAchievements.Add(achievement);
+						}
+					} catch (Exception e) {
+						Debug.LogException(e);
 					}
 				}
 			}
@@ -108,10 +139,6 @@ public class Achievements : MonoBehaviour {
 			checkForNewVersion();
 
 			lastCheck = now;
-		}
-
-		if (achievementsWindow != null) {
-			achievementsWindow.update();
 		}
 	}
 
@@ -272,7 +299,7 @@ public class Achievements : MonoBehaviour {
 		}
 
 		// new way
-		foreach (Achievement achievement in getAchievementsList()) {
+		foreach (Achievement achievement in achievementsList) {
 			string key = achievement.getKey();
 			if (node.HasNode(key)) {
 				ConfigNode achievementNode = node.GetNode(key);
@@ -294,8 +321,10 @@ public class Achievements : MonoBehaviour {
 	private void saveEarnedAchievements(Dictionary<Achievement, AchievementEarn> earnedAchievements) {
 		Debug.Log("saving achievements (" + earnedAchievements.Count() + " earned)");
 		ConfigNode node = new ConfigNode();
-		foreach (Achievement achievement in getAchievementsList()) {
+		foreach (Achievement achievement in achievementsList) {
 			ConfigNode achievementNode = node.AddNode(achievement.getKey());
+
+			achievement.save(achievementNode);
 
 			AchievementEarn earn = earnedAchievements.ContainsKey(achievement) ? earnedAchievements[achievement] : null;
 			if (earn != null) {
@@ -304,8 +333,6 @@ public class Achievements : MonoBehaviour {
 					achievementNode.AddValue("flight", earn.flightName);
 				}
 			}
-
-			achievement.save(achievementNode);
 		}
 		node.Save(settingsFile);
 	}
@@ -315,7 +342,7 @@ public class Achievements : MonoBehaviour {
 	}
 
 	private Achievement getAchievementByKey(string key) {
-		foreach (Achievement achievement in getAchievementsList()) {
+		foreach (Achievement achievement in achievementsList) {
 			if (achievement.getKey() == key) {
 				return achievement;
 			}
@@ -323,7 +350,7 @@ public class Achievements : MonoBehaviour {
 		throw new ArgumentException("unknown achievement: " + key);
 	}
 
-	private IEnumerable<Achievement> getAchievementsList() {
+	private List<Achievement> getAchievementsList() {
 		List<Achievement> achievements = new List<Achievement>();
 		foreach (IEnumerable<Achievement> categoryAchievements in this.achievements.Values.AsEnumerable()) {
 			achievements.AddRange(categoryAchievements);
@@ -333,23 +360,35 @@ public class Achievements : MonoBehaviour {
 
 	private Dictionary<Category, IEnumerable<Achievement>> getAchievements() {
 		Type achievementFactoryType = typeof(AchievementFactory);
-		Assembly assembly = achievementFactoryType.Assembly;
-		IEnumerable<Type> types = assembly.GetTypes().Where<Type>(t => {
-			Type interfaceType = t.GetInterface(achievementFactoryType.FullName);
-			return (interfaceType != null) && interfaceType.Equals(achievementFactoryType);
-		});
+		List<Type> factoryTypes = new List<Type>();
+		foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies()) {
+			factoryTypes.AddRange(assembly.GetTypes().Where<Type>(t => {
+				if (t.IsClass) {
+					Type interfaceType = t.GetInterface(achievementFactoryType.FullName);
+					return (interfaceType != null) && interfaceType.Equals(achievementFactoryType);
+				} else {
+					return false;
+				}
+			}));
+		}
+
 		Dictionary<Category, IEnumerable<Achievement>> achievements = new Dictionary<Category, IEnumerable<Achievement>>();
-		foreach (Type type in types) {
-			AchievementFactory factory = (AchievementFactory) type.GetConstructor(Type.EmptyTypes).Invoke(null);
-			Category category = factory.getCategory();
-			List<Achievement> categoryAchievements;
-			if (achievements.ContainsKey(category)) {
-				categoryAchievements = (List<Achievement>) achievements[category];
-			} else {
-				categoryAchievements = new List<Achievement>();
-				achievements.Add(category, categoryAchievements);
+		foreach (Type type in factoryTypes) {
+			try {
+				AchievementFactory factory = (AchievementFactory) type.GetConstructor(Type.EmptyTypes).Invoke(null);
+				Category category = factory.getCategory();
+				List<Achievement> categoryAchievements;
+				if (achievements.ContainsKey(category)) {
+					categoryAchievements = (List<Achievement>) achievements[category];
+				} else {
+					categoryAchievements = new List<Achievement>();
+					achievements.Add(category, categoryAchievements);
+				}
+				IEnumerable<Achievement> factoryAchievements = factory.getAchievements();
+				categoryAchievements.AddRange(factoryAchievements);
+			} catch (Exception e) {
+				Debug.LogException(e);
 			}
-			categoryAchievements.AddRange(factory.getAchievements());
 		}
 		Debug.Log("number of achievements: " + achievements.getValuesCount() + " in " + achievements.Keys.Count() + " categories");
 		return achievements;

@@ -25,6 +25,9 @@ public abstract class AchievementBase : Achievement {
 	private bool hidden;
 	private bool addonAchievement;
 
+	public virtual void update() {
+	}
+
 	public abstract bool check(Vessel vessel);
 	public abstract string getTitle();
 	public abstract string getText();
