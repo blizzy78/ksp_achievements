@@ -61,3 +61,11 @@ Don't Move or I'll Chute - Land safely using only parachutes.
 "Three mile lander" -land on an atmospheric body using only nuclear engine thrust
 "The longest walk" -walk/run a kerbal 1(+?)km on his own little two feet
 "REPORT: DAMAGE MINIMAL" -collide a craft with one of the buildings at KSC2
+
+-------------------------------------------------------------------------------------------------------
+
+-Travel X distance/speed by rover on Kerbin(and other planets)
+-Travel X distance/speed over water on Kerbin(boat achievements)
+-Travel X diatance/speed by plane on Kerbin
+-Break the sound barrier. Mach 1, mach 2, mach 3, etc
+-Circumnavigation by boat/rover/plane
