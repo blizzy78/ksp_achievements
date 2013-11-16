@@ -71,10 +71,9 @@
     <Compile Include="Achievements\Landing.cs" />
     <Compile Include="Achievements\Orbit.cs" />
     <Compile Include="Body.cs" />
+    <Compile Include="EarnedAchievements.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="Immortalizer.cs" />
     <Compile Include="InfoWindow.cs" />
-    <Compile Include="KSPAddonFixed.cs" />
     <Compile Include="Location.cs" />
     <Compile Include="LocationPicker.cs" />
     <Compile Include="MechJeb\CelestialBodyExtensions.cs" />

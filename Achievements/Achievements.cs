@@ -18,10 +18,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using UnityEngine;
 
+[KSPAddon(KSPAddon.Startup.EveryScene, false)]
 class Achievements : MonoBehaviour {
 	public const string UNKNOWN_VESSEL = "unknown";
 
@@ -31,32 +31,22 @@ class Achievements : MonoBehaviour {
 	private const float SCIENCE_REWARD = 5;
 
 	// debugging
-	private const bool SHOW_ACHIEVEMENTS_IN_MENU = false;
 	private const bool SHOW_LOCATION_PICKER_BUTTON = false;
 
-	private Dictionary<Category, IEnumerable<Achievement>> achievements;
-	private List<Achievement> achievementsList;
+	private static bool? newVersionAvailable = null;
+
 	private long lastCheck = 0;
-	private Dictionary<Achievement, AchievementEarn> earnedAchievements;
 	private AudioClip achievementEarnedClip;
 	private AudioSource achievementEarnedAudioSource;
 	private Toast toast;
 	private HashSet<Achievement> queuedEarnedAchievements = new HashSet<Achievement>();
-	private string settingsFile = KSPUtil.ApplicationRootPath + "GameData/blizzy/Achievements/achievements.dat";
 	private AchievementsWindow achievementsWindow;
 	private WWW versionWWW;
-	private bool? newVersionAvailable = null;
 	private LocationPicker locationPicker;
 	private RenderingManager renderingManager;
 
 	protected void Start() {
-		Debug.LogWarning("Achievements.Start");
-
 		versionWWW = new WWW("http://blizzy.de/achievements/version.txt");
-
-		achievements = getAchievements();
-		achievementsList = getAchievementsList();
-		earnedAchievements = loadEarnedAchievements();
 
 		achievementEarnedClip = GameDatabase.Instance.GetAudioClip("blizzy/Achievements/achievement");
 		achievementEarnedAudioSource = gameObject.AddComponent<AudioSource>();
@@ -65,8 +55,6 @@ class Achievements : MonoBehaviour {
 		achievementEarnedAudioSource.playOnAwake = false;
 		achievementEarnedAudioSource.loop = false;
 		achievementEarnedAudioSource.Stop();
-
-		GameEvents.onGameStateSaved.Add(new EventData<Game>.OnEvent(onAutoSave));
 	}
 
 	public void Update() {
@@ -79,8 +67,8 @@ class Achievements : MonoBehaviour {
 	}
 
 	private void updateAchievements() {
-		if (achievementsList != null) {
-			foreach (Achievement achievement in achievementsList) {
+		if (EarnedAchievements.getInstance() != null) {
+			foreach (Achievement achievement in EarnedAchievements.getInstance().achievementsList) {
 				try {
 					achievement.update();
 				} catch (Exception e) {
@@ -91,49 +79,43 @@ class Achievements : MonoBehaviour {
 	}
 
 	private void checkAchievements() {
-		if (achievementsList == null) {
+		if (EarnedAchievements.getInstance() == null) {
 			return;
 		}
 
 		long now = DateTime.UtcNow.Ticks / 10000;
 		if ((now - lastCheck) >= CHECK_INTERVAL) {
-			bool forceSave = false;
+			if (EarnedAchievements.getInstance() != null) {
+				foreach (Achievement achievement in EarnedAchievements.getInstance().achievementsList) {
+					if (!EarnedAchievements.getInstance().earnedAchievements.ContainsKey(achievement)) {
+						Vessel vessel = (FlightGlobals.fetch != null) ? FlightGlobals.ActiveVessel : null;
+						try {
+							if (achievement.check(vessel)) {
+								string key = achievement.getKey();
+								Debug.Log("achievement earned: " + key);
+								AchievementEarn earn = new AchievementEarn(now, (vessel != null) ? vessel.vesselName : Achievements.UNKNOWN_VESSEL);
+								EarnedAchievements.getInstance().earnedAchievements.Add(achievement, earn);
 
-			foreach (Achievement achievement in achievementsList) {
-				if (!earnedAchievements.ContainsKey(achievement)) {
-					Vessel vessel = (FlightGlobals.fetch != null) ? FlightGlobals.ActiveVessel : null;
-					try {
-						if (achievement.check(vessel)) {
-							string key = achievement.getKey();
-							Debug.Log("achievement earned: " + key);
-							AchievementEarn earn = new AchievementEarn(now, (vessel != null) ? vessel.vesselName : Achievements.UNKNOWN_VESSEL);
-							earnedAchievements.Add(achievement, earn);
-
-							forceSave = true;
-
-							// queue for later display
-							queuedEarnedAchievements.Add(achievement);
+								// queue for later display
+								queuedEarnedAchievements.Add(achievement);
+							}
+						} catch (Exception e) {
+							Debug.LogException(e);
 						}
-					} catch (Exception e) {
-						Debug.LogException(e);
 					}
 				}
-			}
 
-			//long done = DateTime.UtcNow.Ticks / 10000;
-			//Debug.LogWarning("checking achievements took " + (done - now) + " ms");
+				//long done = DateTime.UtcNow.Ticks / 10000;
+				//Debug.LogWarning("checking achievements took " + (done - now) + " ms");
 
-			if ((queuedEarnedAchievements.Count() > 0) && (toast == null)) {
-				Achievement achievement = queuedEarnedAchievements.First<Achievement>();
-				queuedEarnedAchievements.Remove(achievement);
+				if ((queuedEarnedAchievements.Count() > 0) && (toast == null)) {
+					Achievement achievement = queuedEarnedAchievements.First<Achievement>();
+					queuedEarnedAchievements.Remove(achievement);
 
-				toast = new Toast(achievement, earnedAchievements[achievement]);
-				playAchievementEarnedClip();
-				awardScience(achievement);
-			}
-
-			if (forceSave) {
-				saveEarnedAchievements(earnedAchievements);
+					toast = new Toast(achievement, EarnedAchievements.getInstance().earnedAchievements[achievement]);
+					playAchievementEarnedClip();
+					awardScience(achievement);
+				}
 			}
 
 			checkForNewVersion();
@@ -147,10 +129,8 @@ class Achievements : MonoBehaviour {
 			return;
 		}
 
-		if ((HighLogic.LoadedScene == GameScenes.SPACECENTER) ||
-			HighLogic.LoadedSceneHasPlanetarium ||
-			((FlightGlobals.fetch != null) && (FlightGlobals.ActiveVessel != null)) ||
-			SHOW_ACHIEVEMENTS_IN_MENU) {
+		if ((EarnedAchievements.getInstance() != null) &&
+			((HighLogic.LoadedScene == GameScenes.SPACECENTER) || HighLogic.LoadedSceneHasPlanetarium || ((FlightGlobals.fetch != null) && (FlightGlobals.ActiveVessel != null)))) {
 
 			drawAchievementsWindowButton();
 		} else {
@@ -225,7 +205,7 @@ class Achievements : MonoBehaviour {
 
 	private void toggleAchievementsWindow() {
 		if (achievementsWindow == null) {
-			achievementsWindow = new AchievementsWindow(achievements, earnedAchievements, newVersionAvailable == true);
+			achievementsWindow = new AchievementsWindow(EarnedAchievements.getInstance().achievements, EarnedAchievements.getInstance().earnedAchievements, newVersionAvailable == true);
 			achievementsWindow.closeCallback = () => {
 				achievementsWindow = null;
 			};
@@ -271,131 +251,5 @@ class Achievements : MonoBehaviour {
 				// ignore
 			}
 		}
-	}
-
-	private Dictionary<Achievement, AchievementEarn> loadEarnedAchievements() {
-		Dictionary<Achievement, AchievementEarn> result = new Dictionary<Achievement, AchievementEarn>();
-		ConfigNode node = ConfigNode.Load(settingsFile) ?? new ConfigNode();
-
-		// old way of doing things
-		List<ConfigNode> legacyNodes = new List<ConfigNode>();
-		foreach (ConfigNode.Value value in node.values) {
-			string key = value.name;
-
-			// legacy
-			if (key == "launch") {
-				key = "launch.1";
-			}
-
-			string time = value.value;
-			ConfigNode legacyNode = new ConfigNode(key);
-			legacyNode.AddValue("time", time);
-			legacyNode.AddValue("flight", Achievements.UNKNOWN_VESSEL);
-			legacyNodes.Add(legacyNode);
-		}
-		foreach (ConfigNode legacyNode in legacyNodes) {
-			node.RemoveValue(legacyNode.name);
-			node.AddNode(legacyNode);
-		}
-
-		// new way
-		foreach (Achievement achievement in achievementsList) {
-			string key = achievement.getKey();
-			if (node.HasNode(key)) {
-				ConfigNode achievementNode = node.GetNode(key);
-				achievement.init(achievementNode);
-
-				if (achievementNode.HasValue("time") && achievementNode.HasValue("flight")) {
-					long time = long.Parse(achievementNode.GetValue("time"));
-					string flightName = achievementNode.HasValue("flight") ? achievementNode.GetValue("flight") : null;
-					AchievementEarn earn = new AchievementEarn(time, flightName);
-					result.Add(achievement, earn);
-				}
-			}
-		}
-
-		Debug.Log("loaded " + result.Count() + " earned achievements");
-		return result;
-	}
-
-	private void saveEarnedAchievements(Dictionary<Achievement, AchievementEarn> earnedAchievements) {
-		Debug.Log("saving achievements (" + earnedAchievements.Count() + " earned)");
-		ConfigNode node = new ConfigNode();
-		foreach (Achievement achievement in achievementsList) {
-			ConfigNode achievementNode = node.AddNode(achievement.getKey());
-
-			achievement.save(achievementNode);
-
-			AchievementEarn earn = earnedAchievements.ContainsKey(achievement) ? earnedAchievements[achievement] : null;
-			if (earn != null) {
-				achievementNode.AddValue("time", earn.time);
-				if (earn.flightName != null) {
-					achievementNode.AddValue("flight", earn.flightName);
-				}
-			}
-		}
-		node.Save(settingsFile);
-	}
-
-	private void onAutoSave(Game game) {
-		saveEarnedAchievements(earnedAchievements);
-	}
-
-	private Achievement getAchievementByKey(string key) {
-		foreach (Achievement achievement in achievementsList) {
-			if (achievement.getKey() == key) {
-				return achievement;
-			}
-		}
-		throw new ArgumentException("unknown achievement: " + key);
-	}
-
-	private List<Achievement> getAchievementsList() {
-		List<Achievement> achievements = new List<Achievement>();
-		foreach (IEnumerable<Achievement> categoryAchievements in this.achievements.Values.AsEnumerable()) {
-			achievements.AddRange(categoryAchievements);
-		}
-		return achievements;
-	}
-
-	private Dictionary<Category, IEnumerable<Achievement>> getAchievements() {
-		Type achievementFactoryType = typeof(AchievementFactory);
-		List<Type> factoryTypes = new List<Type>();
-		foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies()) {
-			try {
-				factoryTypes.AddRange(assembly.GetTypes().Where<Type>(t => {
-					if (t.IsClass) {
-						Type interfaceType = t.GetInterface(achievementFactoryType.FullName);
-						return (interfaceType != null) && interfaceType.Equals(achievementFactoryType);
-					} else {
-						return false;
-					}
-				}));
-			} catch (Exception e) {
-				Debug.LogError("exception while loading types of assembly: " + assembly.FullName);
-				Debug.LogException(e);
-			}
-		}
-
-		Dictionary<Category, IEnumerable<Achievement>> achievements = new Dictionary<Category, IEnumerable<Achievement>>();
-		foreach (Type type in factoryTypes) {
-			try {
-				AchievementFactory factory = (AchievementFactory) type.GetConstructor(Type.EmptyTypes).Invoke(null);
-				Category category = factory.getCategory();
-				List<Achievement> categoryAchievements;
-				if (achievements.ContainsKey(category)) {
-					categoryAchievements = (List<Achievement>) achievements[category];
-				} else {
-					categoryAchievements = new List<Achievement>();
-					achievements.Add(category, categoryAchievements);
-				}
-				IEnumerable<Achievement> factoryAchievements = factory.getAchievements();
-				categoryAchievements.AddRange(factoryAchievements);
-			} catch (Exception e) {
-				Debug.LogException(e);
-			}
-		}
-		Debug.Log("number of achievements: " + achievements.getValuesCount() + " in " + achievements.Keys.Count() + " categories");
-		return achievements;
 	}
 }
