@@ -1,4 +1,8 @@
-﻿1.4.7, 2013-11-16
+﻿1.5.0, 2013-11-16
+- Earned achievements are now saved on a per-save basis instead of globally. Conversion will
+  take place automatically when you open a save file.
+
+1.4.7, 2013-11-16
 - Fixed a bug that could prevent loading the Achievements Plugin correctly when trying to find
   contributed achievements in other mods.
 

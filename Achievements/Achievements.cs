@@ -25,7 +25,7 @@ using UnityEngine;
 class Achievements : MonoBehaviour {
 	public const string UNKNOWN_VESSEL = "unknown";
 
-	private const long VERSION = 8;
+	private const long VERSION = 9;
 	private const long CHECK_INTERVAL = 1500;
 	private const long SAVE_INTERVAL = 300000;
 	private const float SCIENCE_REWARD = 5;
