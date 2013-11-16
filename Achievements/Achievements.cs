@@ -362,14 +362,19 @@ class Achievements : MonoBehaviour {
 		Type achievementFactoryType = typeof(AchievementFactory);
 		List<Type> factoryTypes = new List<Type>();
 		foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies()) {
-			factoryTypes.AddRange(assembly.GetTypes().Where<Type>(t => {
-				if (t.IsClass) {
-					Type interfaceType = t.GetInterface(achievementFactoryType.FullName);
-					return (interfaceType != null) && interfaceType.Equals(achievementFactoryType);
-				} else {
-					return false;
-				}
-			}));
+			try {
+				factoryTypes.AddRange(assembly.GetTypes().Where<Type>(t => {
+					if (t.IsClass) {
+						Type interfaceType = t.GetInterface(achievementFactoryType.FullName);
+						return (interfaceType != null) && interfaceType.Equals(achievementFactoryType);
+					} else {
+						return false;
+					}
+				}));
+			} catch (Exception e) {
+				Debug.LogError("exception while loading types of assembly: " + assembly.FullName);
+				Debug.LogException(e);
+			}
 		}
 
 		Dictionary<Category, IEnumerable<Achievement>> achievements = new Dictionary<Category, IEnumerable<Achievement>>();
