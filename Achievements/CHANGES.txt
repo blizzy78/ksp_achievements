@@ -1,4 +1,8 @@
-﻿1.4.6, 2013-11-10
+﻿1.4.7, 2013-11-16
+- Fixed a bug that could prevent loading the Achievements Plugin correctly when trying to find
+  contributed achievements in other mods.
+
+1.4.6, 2013-11-10
 - Opened up the API so that other mods may contribute new achievements.
 - Added 1 new achievement (now 128 total.)
 
