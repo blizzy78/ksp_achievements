@@ -26,14 +26,32 @@ using UnityEngine;
 class EarnedAchievements : ScenarioModule {
 	private static List<Type> achievementFactoryTypes;
 
+	public static EarnedAchievements instance {
+		get {
+			installScenario();
+
+			Game game = HighLogic.CurrentGame;
+			if (game != null) {
+				return game.scenarios.Select(s => s.moduleRef).OfType<EarnedAchievements>().SingleOrDefault();
+			} else {
+				return null;
+			}
+		}
+	}
+
 	public Dictionary<Category, IEnumerable<Achievement>> achievements {
 		get;
 		private set;
 	}
 
+	private List<Achievement> achievementsList_;
 	public List<Achievement> achievementsList {
-		get;
-		private set;
+		get {
+			if (achievementsList_ == null) {
+				achievementsList_ = getAchievementsList();
+			}
+			return achievementsList_;
+		}
 	}
 
 	public Dictionary<Achievement, AchievementEarn> earnedAchievements {
@@ -41,26 +59,22 @@ class EarnedAchievements : ScenarioModule {
 		private set;
 	}
 
-	public static EarnedAchievements getInstance() {
+	private static void installScenario() {
 		Game game = HighLogic.CurrentGame;
-		if (game == null) {
-			return null;
-		}
-
-		if (!game.scenarios.Any(s => s.moduleName == typeof(EarnedAchievements).Name)) {
+		if ((game != null) && !game.scenarios.Any(s => s.moduleName == typeof(EarnedAchievements).Name)) {
+			// add scenario to game
 			ProtoScenarioModule scenario = game.AddProtoScenarioModule(typeof(EarnedAchievements),
 				GameScenes.EDITOR, GameScenes.FLIGHT, GameScenes.SPACECENTER, GameScenes.SPH, GameScenes.TRACKSTATION);
+
+			// load scenario instantly
 			if (scenario.targetScenes.Contains(HighLogic.LoadedScene)) {
 				scenario.Load(ScenarioRunner.fetch);
 			}
 		}
-
-		return game.scenarios.Select(s => s.moduleRef).OfType<EarnedAchievements>().SingleOrDefault();
 	}
 
 	public override void OnLoad(ConfigNode node) {
-		achievements = getAchievements();
-		achievementsList = getAchievementsList();
+		achievements = createAchievements();
 
 		if (node.HasNode("achievements")) {
 			node = node.GetNode("achievements");
@@ -143,15 +157,6 @@ class EarnedAchievements : ScenarioModule {
 		}
 	}
 
-	private Achievement getAchievementByKey(string key) {
-		foreach (Achievement achievement in achievementsList) {
-			if (achievement.getKey() == key) {
-				return achievement;
-			}
-		}
-		throw new ArgumentException("unknown achievement: " + key);
-	}
-
 	private List<Achievement> getAchievementsList() {
 		List<Achievement> achievements = new List<Achievement>();
 		foreach (IEnumerable<Achievement> categoryAchievements in this.achievements.Values.AsEnumerable()) {
@@ -160,7 +165,7 @@ class EarnedAchievements : ScenarioModule {
 		return achievements;
 	}
 
-	private Dictionary<Category, IEnumerable<Achievement>> getAchievements() {
+	private Dictionary<Category, IEnumerable<Achievement>> createAchievements() {
 		IEnumerable<Type> factoryTypes = getAchievementFactoryTypes();
 		Dictionary<Category, IEnumerable<Achievement>> achievements = new Dictionary<Category, IEnumerable<Achievement>>();
 		foreach (Type type in factoryTypes) {
@@ -190,19 +195,21 @@ class EarnedAchievements : ScenarioModule {
 			Type achievementFactoryType = typeof(AchievementFactory);
 			foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies()) {
 				try {
-					achievementFactoryTypes.AddRange(assembly.GetTypes().Where<Type>(t => {
-						if (t.IsClass) {
-							Type interfaceType = t.GetInterface(achievementFactoryType.FullName);
-							return (interfaceType != null) && interfaceType.Equals(achievementFactoryType);
-						} else {
-							return false;
-						}
-					}));
+					achievementFactoryTypes.AddRange(assembly.GetTypes().Where<Type>(isAchievementFactoryType));
 				} catch (Exception) {
 					Debug.LogWarning("exception while loading types, ignoring assembly: " + assembly.FullName);
 				}
 			}
 		}
 		return achievementFactoryTypes;
+	}
+
+	private static bool isAchievementFactoryType(Type type) {
+		if (type.IsClass) {
+			Type interfaceType = type.GetInterface(typeof(AchievementFactory).FullName);
+			return (interfaceType != null) && interfaceType.Equals(typeof(AchievementFactory));
+		} else {
+			return false;
+		}
 	}
 }

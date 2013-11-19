@@ -57,10 +57,9 @@ public static class Extensions {
 	}
 
 	public static bool hasSurfaceSample(this Vessel vessel) {
-		return vessel.FindPartModulesImplementing<ModuleScienceExperiment>().FirstOrDefault(e =>
+		return vessel.FindPartModulesImplementing<ModuleScienceExperiment>().Any(e =>
 				(e.experimentID == "surfaceSample") &&
-				e.GetData().FirstOrDefault(d => (d != null) && (d.dataAmount > 0)) != null)
-			!= null;
+				e.GetData().Any(d => (d != null) && (d.dataAmount > 0)));
 	}
 
 	public static int getValuesCount(this Dictionary<Category, IEnumerable<Achievement>> achievements) {
@@ -88,6 +87,6 @@ public static class Extensions {
 	}
 
 	public static bool isEngine(this Part part) {
-		return part.Modules.OfType<ModuleEngines>().Count() > 0;
+		return part.Modules.OfType<ModuleEngines>().FirstOrDefault() != null;
 	}
 }

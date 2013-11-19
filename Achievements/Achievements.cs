@@ -67,8 +67,8 @@ class Achievements : MonoBehaviour {
 	}
 
 	private void updateAchievements() {
-		if (EarnedAchievements.getInstance() != null) {
-			foreach (Achievement achievement in EarnedAchievements.getInstance().achievementsList) {
+		if (EarnedAchievements.instance != null) {
+			foreach (Achievement achievement in EarnedAchievements.instance.achievementsList) {
 				try {
 					achievement.update();
 				} catch (Exception e) {
@@ -79,22 +79,18 @@ class Achievements : MonoBehaviour {
 	}
 
 	private void checkAchievements() {
-		if (EarnedAchievements.getInstance() == null) {
-			return;
-		}
-
 		long now = DateTime.UtcNow.Ticks / 10000;
 		if ((now - lastCheck) >= CHECK_INTERVAL) {
-			if (EarnedAchievements.getInstance() != null) {
-				foreach (Achievement achievement in EarnedAchievements.getInstance().achievementsList) {
-					if (!EarnedAchievements.getInstance().earnedAchievements.ContainsKey(achievement)) {
+			if (EarnedAchievements.instance != null) {
+				foreach (Achievement achievement in EarnedAchievements.instance.achievementsList) {
+					if (!EarnedAchievements.instance.earnedAchievements.ContainsKey(achievement)) {
 						Vessel vessel = (FlightGlobals.fetch != null) ? FlightGlobals.ActiveVessel : null;
 						try {
 							if (achievement.check(vessel)) {
 								string key = achievement.getKey();
 								Debug.Log("achievement earned: " + key);
 								AchievementEarn earn = new AchievementEarn(now, (vessel != null) ? vessel.vesselName : Achievements.UNKNOWN_VESSEL);
-								EarnedAchievements.getInstance().earnedAchievements.Add(achievement, earn);
+								EarnedAchievements.instance.earnedAchievements.Add(achievement, earn);
 
 								// queue for later display
 								queuedEarnedAchievements.Add(achievement);
@@ -112,7 +108,7 @@ class Achievements : MonoBehaviour {
 					Achievement achievement = queuedEarnedAchievements.First<Achievement>();
 					queuedEarnedAchievements.Remove(achievement);
 
-					toast = new Toast(achievement, EarnedAchievements.getInstance().earnedAchievements[achievement]);
+					toast = new Toast(achievement, EarnedAchievements.instance.earnedAchievements[achievement]);
 					playAchievementEarnedClip();
 					awardScience(achievement);
 				}
@@ -129,17 +125,17 @@ class Achievements : MonoBehaviour {
 			return;
 		}
 
-		if ((EarnedAchievements.getInstance() != null) &&
-			((HighLogic.LoadedScene == GameScenes.SPACECENTER) || HighLogic.LoadedSceneHasPlanetarium || ((FlightGlobals.fetch != null) && (FlightGlobals.ActiveVessel != null)))) {
+		if ((EarnedAchievements.instance != null) &&
+			((HighLogic.LoadedScene == GameScenes.EDITOR) || (HighLogic.LoadedScene == GameScenes.FLIGHT) || (HighLogic.LoadedScene == GameScenes.SPACECENTER) ||
+				(HighLogic.LoadedScene == GameScenes.SPH) || (HighLogic.LoadedScene == GameScenes.TRACKSTATION))) {
 
 			drawAchievementsWindowButton();
 		} else {
+			// auto-close achievements list window
 			achievementsWindow = null;
 		}
 
-		if (SHOW_LOCATION_PICKER_BUTTON &&
-			((FlightGlobals.fetch != null) && (FlightGlobals.ActiveVessel != null))) {
-
+		if (SHOW_LOCATION_PICKER_BUTTON && (HighLogic.LoadedScene == GameScenes.FLIGHT) && MapView.MapIsEnabled) {
 			drawLocationPickerButton();
 		}
 
@@ -147,6 +143,7 @@ class Achievements : MonoBehaviour {
 			if (!toast.isTimedOut()) {
 				toast.draw();
 			} else {
+				// auto-close toast after timeout
 				toast = null;
 			}
 		}
@@ -205,7 +202,7 @@ class Achievements : MonoBehaviour {
 
 	private void toggleAchievementsWindow() {
 		if (achievementsWindow == null) {
-			achievementsWindow = new AchievementsWindow(EarnedAchievements.getInstance().achievements, EarnedAchievements.getInstance().earnedAchievements, newVersionAvailable == true);
+			achievementsWindow = new AchievementsWindow(EarnedAchievements.instance.achievements, EarnedAchievements.instance.earnedAchievements, newVersionAvailable == true);
 			achievementsWindow.closeCallback = () => {
 				achievementsWindow = null;
 			};

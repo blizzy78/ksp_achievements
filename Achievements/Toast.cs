@@ -38,8 +38,7 @@ class Toast {
 		float top = (Screen.height / 2 - height) / 2 + Screen.height / 2;
 		// make sure it doesn't block the nav ball
 		top = Math.Min(top, Screen.height - NAV_BALL_HEIGHT - height - 20);
-		rect = new Rect((Screen.width - AchievementGUI.TEX_WIDTH) / 2, top,
-			AchievementGUI.TEX_WIDTH, height);
+		rect = new Rect((Screen.width - AchievementGUI.TEX_WIDTH) / 2, top, AchievementGUI.TEX_WIDTH, height);
 	}
 
 	public void draw() {

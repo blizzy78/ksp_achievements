@@ -148,10 +148,10 @@ class KesslerSyndrome : CountingAchievement {
 		if (FlightGlobals.fetch != null) {
 			if (!counted) {
 				resetCounter();
-				foreach (Vessel v in FlightGlobals.Vessels) {
-					if ((v.vesselType == VesselType.Debris) && v.getCurrentBody().Equals(Body.KERBIN) && v.isInStableOrbit()) {
-						increaseCounter();
-					}
+				foreach (Vessel v in FlightGlobals.Vessels.Where((v =>
+						(v.vesselType == VesselType.Debris) && v.getCurrentBody().Equals(Body.KERBIN) && v.isInStableOrbit()))) {
+
+					increaseCounter();
 				}
 				counted = true;
 			}

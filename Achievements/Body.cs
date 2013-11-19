@@ -106,11 +106,6 @@ public class Body {
 	}
 
 	public static Body get(CelestialBody b) {
-		foreach (Body body in ALL) {
-			if (body.isSame(b)) {
-				return body;
-			}
-		}
-		throw new ArgumentException("unknown body: " + b.name);
+		return ALL.Single(body => body.isSame(b));
 	}
 }
