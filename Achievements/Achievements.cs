@@ -126,8 +126,8 @@ class Achievements : MonoBehaviour {
 		}
 
 		if ((EarnedAchievements.instance != null) &&
-			((HighLogic.LoadedScene == GameScenes.EDITOR) || (HighLogic.LoadedScene == GameScenes.FLIGHT) || (HighLogic.LoadedScene == GameScenes.SPACECENTER) ||
-				(HighLogic.LoadedScene == GameScenes.SPH) || (HighLogic.LoadedScene == GameScenes.TRACKSTATION))) {
+			((HighLogic.LoadedScene == GameScenes.FLIGHT) || (HighLogic.LoadedScene == GameScenes.SPACECENTER) ||
+				(HighLogic.LoadedScene == GameScenes.TRACKSTATION))) {
 
 			drawAchievementsWindowButton();
 		} else {
