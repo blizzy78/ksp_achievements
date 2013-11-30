@@ -69,3 +69,15 @@ Don't Move or I'll Chute - Land safely using only parachutes.
 -Travel X diatance/speed by plane on Kerbin
 -Break the sound barrier. Mach 1, mach 2, mach 3, etc
 -Circumnavigation by boat/rover/plane
+
+-------------------------------------------------------------------------------------------------------
+
+Around the world: complete a round trip around Kerbin, using a jet powered aircraft.
+Same stuff, but for Laythe.
+Pole dancer: Land on both poles of Kerbin, using jet powered aircraft.
+UKSS - Build a space station in LKO, using more then 5/10/20/50/100 docked modules.
+Master of aerobreaking - Aerobreak into orbit from velocities higher then 5km/s, 8km/s, 10km/s.
+Ramming speed! - Collide 2 ships in space, destroying both and killing all the crew in process.
+Mun walk - land on both Mun and Minmus in one launch.
+Rock collection - Obtain surface samples from all planets and bring them back to Kerbin (transmitting science doesn't count).
+'Eavy Metal - Launch a ship that weights more then 5/10/25/50 ton.
