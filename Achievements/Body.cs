@@ -50,6 +50,8 @@ public class Body {
 	public static readonly Body SENTAR = new Body("Sentar");
 	public static readonly Body SKELTON = new Body("Skelton");
 	public static readonly Body THUD = new Body("Thud");
+	public static readonly Body SERIOUS = new Body("Serious");
+	public static readonly Body JOKER = new Body("Joker");
 
 	public static readonly IEnumerable<Body> STOCK_ALL = new Body[] { SUN, MOHO, EVE, KERBIN, DUNA, DRES, JOOL, EELOO, GILLY, MUN, MINMUS, IKE, LAYTHE, VALL, TYLO, BOP, POL };
 	public static readonly IEnumerable<Body> STOCK_PLANETS = new Body[] { MOHO, EVE, KERBIN, DUNA, DRES, JOOL, EELOO };
@@ -59,10 +61,10 @@ public class Body {
 	public static readonly IEnumerable<Body> STOCK_SPLASHABLE = new Body[] { EVE, KERBIN, LAYTHE };
 	public static readonly IEnumerable<Body> STOCK_WITH_ATMOSPHERE = new Body[] { EVE, KERBIN, DUNA, JOOL, LAYTHE };
 
-	public static readonly IEnumerable<Body> SENTAR_ALL = new Body[] { ABLATE, ASCENSION, ERIN, INACCESSABLE, POCK, RINGLE, SENTAR, SKELTON, THUD };
-	public static readonly IEnumerable<Body> SENTAR_PLANETS = new Body[] { ABLATE, ASCENSION, ERIN, INACCESSABLE, RINGLE, SENTAR, SKELTON, THUD };
+	public static readonly IEnumerable<Body> SENTAR_ALL = new Body[] { ABLATE, ASCENSION, ERIN, INACCESSABLE, POCK, RINGLE, SENTAR, SKELTON, THUD, SERIOUS, JOKER };
+	public static readonly IEnumerable<Body> SENTAR_PLANETS = new Body[] { ABLATE, ASCENSION, ERIN, INACCESSABLE, RINGLE, SENTAR, SKELTON, THUD, JOKER };
 	public static readonly IEnumerable<Body> SENTAR_MOONS = new Body[] { POCK };
-	public static readonly IEnumerable<Body> SENTAR_LANDABLE = new Body[] { ABLATE, ASCENSION, ERIN, INACCESSABLE, POCK, RINGLE, SKELTON, THUD };
+	public static readonly IEnumerable<Body> SENTAR_LANDABLE = new Body[] { ABLATE, ASCENSION, ERIN, INACCESSABLE, POCK, RINGLE, SKELTON, THUD, JOKER };
 	public static readonly IEnumerable<Body> SENTAR_SPLASHABLE = new Body[] { ERIN };
 	public static readonly IEnumerable<Body> SENTAR_WITH_ATMOSPHERE = new Body[] { ERIN, SENTAR, SKELTON };
 
