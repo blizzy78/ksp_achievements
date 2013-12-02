@@ -25,7 +25,7 @@ class BodyEVAFactory : AchievementFactory {
 	public IEnumerable<Achievement> getAchievements() {
 		return new Achievement[] {
 			new AllBodiesEVA(Body.STOCK_LANDABLE, "Steps in the Sand", "Set foot on every planet and moon.", "landing.allBodiesEVA"),
-			new AllBodiesEVA(Body.SENTAR_LANDABLE, "More Steps in the Sand", "Set foot on every planet and moon in the Sentar system.",
+			new AllBodiesEVA(Body.SENTAR_LANDABLE, "More Steps in the Sand", "Set foot on every planet and moon in the Sentar and Serious systems.",
 				"landing.allBodiesEVA.sentar").addon()
 		};
 	}

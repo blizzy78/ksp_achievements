@@ -30,7 +30,7 @@ class SurfaceSampleFactory : AchievementFactory {
 		achievements.AddRange(new Achievement[] {
 			new SurfaceSample(),
 			new AllBodiesSurfaceSample(Body.STOCK_LANDABLE, "Pile of Dirt", "Take surface samples on all planets and moons.", "surfaceSample.allBodies"),
-			new AllBodiesSurfaceSample(Body.SENTAR_LANDABLE, "Another Pile of Dirt", "Take surface samples on all planets and moons in the Sentar system.",
+			new AllBodiesSurfaceSample(Body.SENTAR_LANDABLE, "Another Pile of Dirt", "Take surface samples on all planets and moons in the Sentar and Serious systems.",
 				"surfaceSample.allBodies.sentar").addon()
 		});
 		return achievements;
