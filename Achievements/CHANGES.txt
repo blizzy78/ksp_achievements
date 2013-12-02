@@ -1,4 +1,7 @@
-﻿1.5.0, 2013-11-16
+﻿1.5.1, 2013-11-02
+- Added 4 new achievements (now 132 total.)
+
+1.5.0, 2013-11-16
 - Earned achievements are now saved on a per-save basis instead of globally. Conversion will
   take place automatically when you open a save file.
 
