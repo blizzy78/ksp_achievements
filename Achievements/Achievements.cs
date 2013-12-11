@@ -65,6 +65,10 @@ class Achievements : MonoBehaviour {
 		windowButton.OnClick += (e) => toggleAchievementsWindow();
 	}
 
+	public void OnDestroy() {
+		windowButton.Destroy();
+	}
+
 	public void Update() {
 		updateAchievements();
 		checkAchievements();
