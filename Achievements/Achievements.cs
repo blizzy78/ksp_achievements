@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using Toolbar;
 
 [KSPAddon(KSPAddon.Startup.EveryScene, false)]
 class Achievements : MonoBehaviour {
@@ -44,6 +45,7 @@ class Achievements : MonoBehaviour {
 	private WWW versionWWW;
 	private LocationPicker locationPicker;
 	private RenderingManager renderingManager;
+	private IButton windowButton;
 
 	protected void Start() {
 		versionWWW = new WWW("http://blizzy.de/achievements/version.txt");
@@ -55,6 +57,12 @@ class Achievements : MonoBehaviour {
 		achievementEarnedAudioSource.playOnAwake = false;
 		achievementEarnedAudioSource.loop = false;
 		achievementEarnedAudioSource.Stop();
+
+		windowButton = ToolbarManager.Instance.add("achievements", "achievements");
+		windowButton.TexturePath = "blizzy/Achievements/button-normal";
+		windowButton.ToolTip = "Achievements";
+		windowButton.Visibility = new GameScenesVisibility(GameScenes.FLIGHT, GameScenes.TRACKSTATION, GameScenes.EDITOR, GameScenes.SPH);
+		windowButton.OnClick += (e) => toggleAchievementsWindow();
 	}
 
 	public void Update() {
@@ -111,6 +119,7 @@ class Achievements : MonoBehaviour {
 					toast = new Toast(achievement, EarnedAchievements.instance.earnedAchievements[achievement]);
 					playAchievementEarnedClip();
 					awardScience(achievement);
+					highlightButton();
 				}
 			}
 
@@ -125,13 +134,8 @@ class Achievements : MonoBehaviour {
 			return;
 		}
 
-		if ((EarnedAchievements.instance != null) &&
-			((HighLogic.LoadedScene == GameScenes.FLIGHT) || (HighLogic.LoadedScene == GameScenes.SPACECENTER) ||
-				(HighLogic.LoadedScene == GameScenes.TRACKSTATION))) {
-
-			drawAchievementsWindowButton();
-		} else {
-			// auto-close achievements list window
+		// auto-close achievements list window
+		if ((EarnedAchievements.instance == null) || !windowButton.Visibility.Visible) {
 			achievementsWindow = null;
 		}
 
@@ -170,26 +174,6 @@ class Achievements : MonoBehaviour {
 		}
 	}
 
-	private void drawAchievementsWindowButton() {
-		GUI.depth = -100;
-		GUI.matrix = Matrix4x4.TRS(Vector3.zero, Quaternion.Euler(new Vector3(0, 0, -90)), Vector3.one);
-		GUIStyle style = new GUIStyle(GUI.skin.button);
-		if (newVersionAvailable == true) {
-			style.normal.textColor = Color.yellow;
-			style.onHover.textColor = Color.yellow;
-			style.hover.textColor = Color.yellow;
-			style.onActive.textColor = Color.yellow;
-			style.active.textColor = Color.yellow;
-			style.onFocused.textColor = Color.yellow;
-			style.focused.textColor = Color.yellow;
-		}
-		if (GUI.Button(new Rect(-600, Screen.width - 25, 120, 25), "Achievements", style)) {
-			toggleAchievementsWindow();
-		}
-		GUI.matrix = Matrix4x4.identity;
-		GUI.depth = 0;
-	}
-
 	private void drawLocationPickerButton() {
 		GUI.depth = -100;
 		GUI.matrix = Matrix4x4.TRS(Vector3.zero, Quaternion.Euler(new Vector3(0, 0, -90)), Vector3.one);
@@ -206,6 +190,9 @@ class Achievements : MonoBehaviour {
 			achievementsWindow.closeCallback = () => {
 				achievementsWindow = null;
 			};
+
+			// reset toolbar button
+			windowButton.TexturePath = "blizzy/Achievements/button-normal";
 		} else {
 			achievementsWindow = null;
 		}
@@ -244,9 +231,18 @@ class Achievements : MonoBehaviour {
 			try {
 				long ver = long.Parse(versionWWW.text);
 				newVersionAvailable = ver > VERSION;
+				if (newVersionAvailable == true) {
+					highlightButton();
+				}
 			} catch (Exception) {
 				// ignore
 			}
+		}
+	}
+
+	private void highlightButton() {
+		if (achievementsWindow == null) {
+			windowButton.TexturePath = "blizzy/Achievements/button-highlight";
 		}
 	}
 }
