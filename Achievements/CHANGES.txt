@@ -1,4 +1,7 @@
-﻿1.5.1, 2013-11-02
+﻿1.5.2, 2013-12-11
+- Changed achievements button to use the Toolbar Plugin (included in download.)
+
+1.5.1, 2013-12-02
 - Added 4 new achievements (now 132 total.)
 
 1.5.0, 2013-11-16
