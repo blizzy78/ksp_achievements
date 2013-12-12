@@ -34,6 +34,7 @@ class Achievements : MonoBehaviour {
 	// debugging
 	private const bool SHOW_LOCATION_PICKER_BUTTON = false;
 
+	private static WWW versionWWW;
 	private static bool? newVersionAvailable = null;
 
 	private long lastCheck = 0;
@@ -42,13 +43,14 @@ class Achievements : MonoBehaviour {
 	private Toast toast;
 	private HashSet<Achievement> queuedEarnedAchievements = new HashSet<Achievement>();
 	private AchievementsWindow achievementsWindow;
-	private WWW versionWWW;
 	private LocationPicker locationPicker;
 	private RenderingManager renderingManager;
 	private IButton windowButton;
 
 	protected void Start() {
-		versionWWW = new WWW("http://blizzy.de/achievements/version.txt");
+		if (versionWWW == null) {
+			versionWWW = new WWW("http://blizzy.de/achievements/version.txt");
+		}
 
 		achievementEarnedClip = GameDatabase.Instance.GetAudioClip("blizzy/Achievements/achievement");
 		achievementEarnedAudioSource = gameObject.AddComponent<AudioSource>();
