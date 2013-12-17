@@ -38,7 +38,7 @@ class SpaceDunk : AchievementBase {
 
 	private bool onSurfaceStep;
 	private double startAltitude;
-	private float startFuel;
+	private double startFuel;
 	private Body startBody;
 
 	private void onVesselChange(Vessel vessel) {
@@ -65,7 +65,7 @@ class SpaceDunk : AchievementBase {
 		}
 	}
 
-	private float getFuel(Vessel vessel) {
+	private double getFuel(Vessel vessel) {
 		return vessel.FindPartModulesImplementing<KerbalEVA>().First().Fuel;
 	}
 
