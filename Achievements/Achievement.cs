@@ -25,6 +25,7 @@ public interface Achievement {
 	void save(ConfigNode node);
 	void update();
 	bool check(Vessel vessel);
+	void destroy();
 	string getTitle();
 	string getText();
 	string getKey();

@@ -96,6 +96,14 @@ class EarnedAchievements : ScenarioModule {
 		saveEarnedAchievements(node);
 	}
 
+	public void OnDestroy() {
+		if (achievementsList_ != null) {
+			foreach (Achievement achievement in achievementsList_) {
+				achievement.destroy();
+			}
+		}
+	}
+
 	private Dictionary<Achievement, AchievementEarn> loadEarnedAchievements(ConfigNode node) {
 		Dictionary<Achievement, AchievementEarn> result = new Dictionary<Achievement, AchievementEarn>();
 

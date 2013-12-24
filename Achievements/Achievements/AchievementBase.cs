@@ -22,8 +22,32 @@ using System.Text;
 using UnityEngine;
 
 public abstract class AchievementBase : Achievement {
+	private interface IEventHandlerEntry {
+		void register();
+		void unregister();
+	}
+
+	private class EventHandlerEntry<T> : IEventHandlerEntry {
+		private EventData<T> evt;
+		private EventData<T>.OnEvent callback;
+
+		internal EventHandlerEntry(EventData<T> evt, EventData<T>.OnEvent callback) {
+			this.evt = evt;
+			this.callback = callback;
+		}
+
+		public void register() {
+			evt.Add(callback);
+		}
+
+		public void unregister() {
+			evt.Remove(callback);
+		}
+	}
+
 	private bool hidden;
 	private bool addonAchievement;
+	private List<IEventHandlerEntry> eventHandlers = new List<IEventHandlerEntry>();
 
 	public virtual void update() {
 	}
@@ -62,39 +86,51 @@ public abstract class AchievementBase : Achievement {
 	public virtual void save(ConfigNode node) {
 	}
 
+	public virtual void destroy() {
+		foreach (IEventHandlerEntry entry in eventHandlers) {
+			entry.unregister();
+		}
+	}
+
 	protected void registerOnVesselChange(EventData<Vessel>.OnEvent callback) {
-		GameEvents.onVesselChange.Add(new EventData<Vessel>.OnEvent(callback));
+		registerEventHandler(GameEvents.onVesselChange, callback);
 	}
 
 	protected void registerOnVesselCreate(EventData<Vessel>.OnEvent callback) {
-		GameEvents.onVesselCreate.Add(new EventData<Vessel>.OnEvent(callback));
+		registerEventHandler(GameEvents.onVesselCreate, callback);
 	}
 
 	protected void registerOnVesselSituationChange(EventData<GameEvents.HostedFromToAction<Vessel, Vessel.Situations>>.OnEvent callback) {
-		GameEvents.onVesselSituationChange.Add(new EventData<GameEvents.HostedFromToAction<Vessel, Vessel.Situations>>.OnEvent(callback));
+		registerEventHandler(GameEvents.onVesselSituationChange, callback);
 	}
 
 	protected void registerOnCrash(EventData<EventReport>.OnEvent callback) {
-		GameEvents.onCrash.Add(new EventData<EventReport>.OnEvent(callback));
+		registerEventHandler(GameEvents.onCrash, callback);
 	}
 
 	protected void registerOnCrewKilled(EventData<EventReport>.OnEvent callback) {
-		GameEvents.onCrewKilled.Add(new EventData<EventReport>.OnEvent(callback));
+		registerEventHandler(GameEvents.onCrewKilled, callback);
 	}
 
 	protected void registerOnPartCouple(EventData<GameEvents.FromToAction<Part, Part>>.OnEvent callback) {
-		GameEvents.onPartCouple.Add(new EventData<GameEvents.FromToAction<Part, Part>>.OnEvent(callback));
+		registerEventHandler(GameEvents.onPartCouple, callback);
 	}
 
 	protected void registerOnPartRemove(EventData<GameEvents.HostTargetAction<Part, Part>>.OnEvent callback) {
-		GameEvents.onPartRemove.Add(new EventData<GameEvents.HostTargetAction<Part, Part>>.OnEvent(callback));
+		registerEventHandler(GameEvents.onPartRemove, callback);
 	}
 
 	protected void registerOnTechnologyResearched(EventData<GameEvents.HostTargetAction<RDTech, RDTech.OperationResult>>.OnEvent callback) {
-		GameEvents.OnTechnologyResearched.Add(new EventData<GameEvents.HostTargetAction<RDTech, RDTech.OperationResult>>.OnEvent(callback));
+		registerEventHandler(GameEvents.OnTechnologyResearched, callback);
 	}
 
 	protected void registerOnLaunch(EventData<EventReport>.OnEvent callback) {
-		GameEvents.onLaunch.Add(new EventData<EventReport>.OnEvent(callback));
+		registerEventHandler(GameEvents.onLaunch, callback);
+	}
+
+	private void registerEventHandler<T>(EventData<T> evt, EventData<T>.OnEvent callback) {
+		EventHandlerEntry<T> entry = new EventHandlerEntry<T>(evt, callback);
+		entry.register();
+		eventHandlers.Add(entry);
 	}
 }
