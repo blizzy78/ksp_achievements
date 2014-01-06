@@ -35,6 +35,7 @@ class AchievementsWindow {
 	private Vector2 achievementsScrollPos;
 	private Dictionary<Achievement, AchievementGUI> achievementGuis = new Dictionary<Achievement, AchievementGUI>();
 	private Achievement expandedAchievement;
+	private EditorLock editorLock = new EditorLock("Achievements_achievementsList");
 
 	public AchievementsWindow(Dictionary<Category, IEnumerable<Achievement>> achievements,
 		Dictionary<Achievement, AchievementEarn> earnedAchievements, bool newVersionAvailable) {
@@ -52,6 +53,8 @@ class AchievementsWindow {
 
 	public void draw() {
 		rect = GUILayout.Window(id, rect, drawContents, "Achievements (earned " + earnedAchievements.Count() + " of " + achievements.getValuesCount() + ")");
+
+		editorLock.draw(rect.Contains(Utils.getMousePosition()));
 	}
 
 	private void drawContents(int id) {
@@ -95,6 +98,8 @@ class AchievementsWindow {
 	}
 
 	private void close() {
+		editorLock.draw(false);
+
 		if (closeCallback != null) {
 			closeCallback.Invoke();
 		}

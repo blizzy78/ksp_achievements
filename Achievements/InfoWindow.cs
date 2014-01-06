@@ -29,6 +29,7 @@ class InfoWindow {
 	private string title;
 	private int id = new System.Random().Next(int.MaxValue);
 	private Rect rect = new Rect(100, 100, 200, 0);
+	private EditorLock editorLock = new EditorLock("Achievements_info");
 
 	public InfoWindow(string title) {
 		this.title = title;
@@ -36,6 +37,8 @@ class InfoWindow {
 
 	public void draw() {
 		rect = GUILayout.Window(id, rect, drawContents, title);
+
+		editorLock.draw(rect.Contains(Utils.getMousePosition()));
 	}
 
 	private void drawContents(int id) {
@@ -59,8 +62,10 @@ class InfoWindow {
 	}
 
 	private void close() {
+		editorLock.draw(false);
+
 		if (closeCallback != null) {
-			closeCallback.Invoke();
+			closeCallback();
 		}
 	}
 }
