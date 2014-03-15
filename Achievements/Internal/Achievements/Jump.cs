@@ -23,8 +23,8 @@ using UnityEngine;
 
 namespace Achievements {
 	internal class JumpFactory : AchievementFactory {
-			public IEnumerable<Achievement> getAchievements() {
-				return new Achievement[] {
+		public IEnumerable<Achievement> getAchievements() {
+			return new Achievement[] {
 				new SpaceDunk()
 			};
 		}
@@ -67,7 +67,7 @@ namespace Achievements {
 		}
 
 		private double getFuel(Vessel vessel) {
-			return vessel.FindPartModulesImplementing<KerbalEVA>().First().Fuel;
+			return (double) vessel.FindPartModulesImplementing<KerbalEVA>().Sum(eva => eva.Fuel);
 		}
 
 		public override string getTitle() {
