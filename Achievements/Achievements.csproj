@@ -48,52 +48,59 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Achievement.cs" />
-    <Compile Include="AchievementEarn.cs" />
-    <Compile Include="AchievementFactory.cs" />
-    <Compile Include="AchievementGUI.cs" />
-    <Compile Include="Achievements.cs" />
-    <Compile Include="AchievementsWindow.cs" />
-    <Compile Include="Achievements\AchievementBase.cs" />
-    <Compile Include="Achievements\Category.cs" />
-    <Compile Include="Achievements\CountingAchievement.cs" />
-    <Compile Include="Achievements\Altitude.cs" />
-    <Compile Include="Achievements\Kill.cs" />
-    <Compile Include="Achievements\Crash.cs" />
-    <Compile Include="Achievements\Docking.cs" />
-    <Compile Include="Achievements\Flag.cs" />
-    <Compile Include="Achievements\EVA.cs" />
-    <Compile Include="Achievements\HyperEdit.cs" />
-    <Compile Include="Achievements\Jump.cs" />
-    <Compile Include="Achievements\TenSecondsFromLaunchPadToVAB.cs" />
-    <Compile Include="Achievements\SurfaceSample.cs" />
-    <Compile Include="Achievements\Tech.cs" />
-    <Compile Include="Achievements\Launch.cs" />
-    <Compile Include="Achievements\Landing.cs" />
-    <Compile Include="Achievements\Orbit.cs" />
-    <Compile Include="Body.cs" />
-    <Compile Include="EarnedAchievements.cs" />
-    <Compile Include="EditorLock.cs" />
-    <Compile Include="Extensions.cs" />
-    <Compile Include="InfoWindow.cs" />
-    <Compile Include="Location.cs" />
-    <Compile Include="LocationPicker.cs" />
-    <Compile Include="MechJeb\CelestialBodyExtensions.cs" />
-    <Compile Include="MechJeb\GLUtils.cs" />
-    <Compile Include="MechJeb\GuiUtils.cs" />
-    <Compile Include="MechJeb\MuUtils.cs" />
+    <Compile Include="Internal\Achievement.cs" />
+    <Compile Include="Internal\AchievementEarn.cs" />
+    <Compile Include="Internal\AchievementFactory.cs" />
+    <Compile Include="Internal\AchievementGUI.cs" />
+    <Compile Include="Internal\Achievements.cs" />
+    <Compile Include="Internal\AchievementsWindow.cs" />
+    <Compile Include="Internal\Achievements\AchievementBase.cs" />
+    <Compile Include="Internal\Achievements\Category.cs" />
+    <Compile Include="Internal\Achievements\CountingAchievement.cs" />
+    <Compile Include="Internal\Achievements\Altitude.cs" />
+    <Compile Include="Internal\Achievements\Kill.cs" />
+    <Compile Include="Internal\Achievements\Crash.cs" />
+    <Compile Include="Internal\Achievements\Docking.cs" />
+    <Compile Include="Internal\Achievements\Flag.cs" />
+    <Compile Include="Internal\Achievements\EVA.cs" />
+    <Compile Include="Internal\Achievements\HyperEdit.cs" />
+    <Compile Include="Internal\Achievements\Jump.cs" />
+    <Compile Include="Internal\Achievements\TenSecondsFromLaunchPadToVAB.cs" />
+    <Compile Include="Internal\Achievements\SurfaceSample.cs" />
+    <Compile Include="Internal\Achievements\Tech.cs" />
+    <Compile Include="Internal\Achievements\Launch.cs" />
+    <Compile Include="Internal\Achievements\Landing.cs" />
+    <Compile Include="Internal\Achievements\Orbit.cs" />
+    <Compile Include="Internal\Body.cs" />
+    <Compile Include="Internal\EarnedAchievements.cs" />
+    <Compile Include="Internal\EditorLock.cs" />
+    <Compile Include="Internal\Extensions.cs" />
+    <Compile Include="Internal\InfoWindow.cs" />
+    <Compile Include="Internal\Location.cs" />
+    <Compile Include="Internal\LocationPicker.cs" />
+    <Compile Include="Internal\MechJeb\CelestialBodyExtensions.cs" />
+    <Compile Include="Internal\MechJeb\GLUtils.cs" />
+    <Compile Include="Internal\MechJeb\GuiUtils.cs" />
+    <Compile Include="Internal\MechJeb\MuUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Toast.cs" />
-    <Compile Include="Utils.cs" />
+    <Compile Include="Internal\Toast.cs" />
+    <Compile Include="Internal\Utils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="etc\achievements.psd" />
     <None Include="etc\button-highlight.tga" />
     <None Include="etc\button-normal.tga" />
     <None Include="etc\button.psd" />
+    <None Include="etc\toast-addon-expanded.tga" />
+    <None Include="etc\toast-addon-not-earned.tga" />
+    <None Include="etc\toast-addon.tga" />
+    <None Include="etc\toast-expanded.tga" />
+    <None Include="etc\toast-not-earned.tga" />
+    <None Include="etc\toast.tga" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="CHANGES.txt" />
+    <Content Include="etc\achievement.wav" />
     <Content Include="etc\screenshot-all.png" />
     <Content Include="etc\screenshot-spaceport.png" />
     <Content Include="etc\screenshot.png" />
@@ -102,6 +109,11 @@
     <Content Include="TODO.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>del $(TargetDir)*.pdb $(TargetDir)UnityEngine.dll $(TargetDir)Toolbar.dll $(TargetDir)Assembly-CSharp*.dll $(TargetDir)Mono.*.dll $(TargetDir)TDx*.dll
+xcopy /Y $(ProjectDir)etc\*.tga $(TargetDir)
+xcopy /Y $(ProjectDir)etc\*.wav $(TargetDir)</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
