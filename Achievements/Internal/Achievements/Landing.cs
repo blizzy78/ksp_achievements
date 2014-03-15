@@ -294,17 +294,13 @@ namespace Achievements {
 		public override bool check(Vessel vessel) {
 			if (vessel != null) {
 				if (!enginesStep) {
-					enginesStep = getEnginesCount(vessel) > 0;
+					enginesStep = vessel.getEnginesCount() > 0;
 				}
 
-				return base.check(vessel) && enginesStep && (getEnginesCount(vessel) == 0) && !vessel.getCurrentBody().Equals(Body.KERBIN);
+				return base.check(vessel) && enginesStep && (vessel.getEnginesCount() == 0) && !vessel.getCurrentBody().Equals(Body.KERBIN);
 			} else {
 				return false;
 			}
-		}
-
-		private int getEnginesCount(Vessel vessel) {
-			return vessel.FindPartModulesImplementing<ModuleEngines>().Count();
 		}
 
 		public override string getTitle() {

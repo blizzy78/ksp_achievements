@@ -21,33 +21,17 @@ using System.Linq;
 using System.Text;
 
 namespace Achievements {
-	internal static class Extensions {
-		internal static bool between(this double d, double bound1, double bound2) {
-			return ((d >= bound1) && (d <= bound2)) || ((d >= bound2) && (d <= bound1));
+	internal static class PartExtensions {
+		internal static bool isDockingPort(this Part part) {
+			return part.hasModule<ModuleDockingNode>();
 		}
 
-		internal static int getValuesCount(this Dictionary<Category, IEnumerable<Achievement>> achievements) {
-			int count = 0;
-			foreach (IEnumerable<Achievement> categoryAchievements in achievements.Values) {
-				count += categoryAchievements.Count();
-			}
-			return count;
+		internal static bool isEngine(this Part part) {
+			return part.hasModule<ModuleEngines>();
 		}
 
-		internal static double south(this double d) {
-			return -d;
-		}
-
-		internal static double north(this double d) {
-			return d;
-		}
-
-		internal static double west(this double d) {
-			return -d;
-		}
-
-		internal static double east(this double d) {
-			return d;
+		internal static bool hasModule<T>(this Part part) where T : PartModule {
+			return part.Modules.OfType<T>().FirstOrDefault() != null;
 		}
 	}
 }
