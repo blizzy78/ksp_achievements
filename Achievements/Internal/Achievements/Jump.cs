@@ -35,6 +35,7 @@ namespace Achievements {
 	}
 
 	internal class SpaceDunk : AchievementBase {
+		// -29.2269035483408, 236.104528768504
 		private const double MIN_HEIGHT = 240;
 
 		private bool onSurfaceStep;

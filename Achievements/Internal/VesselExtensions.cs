@@ -44,7 +44,7 @@ namespace Achievements {
 		}
 
 		internal static bool isEVA(this Vessel vessel) {
-			return vessel.hasModule<KerbalEVA>();
+			return vessel.hasModule<KerbalEVA>() && vessel.Parts.Count() == 1;
 		}
 
 		internal static bool isInStableOrbit(this Vessel vessel) {
