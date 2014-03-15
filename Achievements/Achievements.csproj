@@ -72,6 +72,7 @@
     <Compile Include="Internal\Achievements\Landing.cs" />
     <Compile Include="Internal\Achievements\Orbit.cs" />
     <Compile Include="Internal\Body.cs" />
+    <Compile Include="Internal\CompatibilityChecker.cs" />
     <Compile Include="Internal\EarnedAchievements.cs" />
     <Compile Include="Internal\EditorLock.cs" />
     <Compile Include="Internal\Extensions.cs" />
