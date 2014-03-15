@@ -51,6 +51,15 @@ namespace Achievements {
 			return vessel.FindPartModulesImplementing<KerbalEVA>().Count() > 0;
 		}
 
+		internal static bool isDockingPort(this Part part) {
+			foreach (PartModule module in part.Modules) {
+				if (module is ModuleDockingNode) {
+					return true;
+				}
+			}
+			return false;
+		}
+
 		internal static bool isInStableOrbit(this Vessel vessel) {
 			Orbit orbit = vessel.orbit;
 			float atmosphereAltitude = Math.Max(vessel.mainBody.maxAtmosphereAltitude, 0f);

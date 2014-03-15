@@ -25,7 +25,7 @@ namespace Achievements {
 	internal class DockingFactory : AchievementFactory {
 		public IEnumerable<Achievement> getAchievements() {
 				return new Achievement[] {
-				new Docking(true, false, "We're Meant to Be Together", "Perform a docking maneuver in orbit.", "docking")
+				new Docking(Docking.Mode.ORBIT, "We're Meant to Be Together", "Perform a docking maneuver in orbit.", "docking")
 			};
 		}
 
@@ -37,7 +37,7 @@ namespace Achievements {
 	internal class SurfaceDockingFactory : AchievementFactory {
 		public IEnumerable<Achievement> getAchievements() {
 				return new Achievement[] {
-				new Docking(false, true, "Base Builder", "Perform a docking maneuver on the surface of another planet or moon.", "docking.surface")
+				new Docking(Docking.Mode.SURFACE, "Base Builder", "Perform a docking maneuver on the surface of another planet or moon.", "docking.surface")
 			};
 		}
 
@@ -47,16 +47,18 @@ namespace Achievements {
 	}
 
 	internal class Docking : AchievementBase {
-		private bool stableOrbit;
-		private bool surface;
+		internal enum Mode {
+			SURFACE, ORBIT
+		}
+
+		private Mode mode;
 		private string title;
 		private string text;
 		private string key;
 		private bool dockStep;
 
-		internal Docking(bool stableOrbit, bool surface, string title, string text, string key) {
-			this.stableOrbit = stableOrbit;
-			this.surface = surface;
+		internal Docking(Mode mode, string title, string text, string key) {
+			this.mode = mode;
 			this.title = title;
 			this.text = text;
 			this.key = key;
@@ -70,8 +72,16 @@ namespace Achievements {
 
 		public void onPartCouple(GameEvents.FromToAction<Part, Part> action) {
 			Vessel vessel = action.from.vessel;
-			dockStep = (stableOrbit && vessel.isInStableOrbit()) ||
-				(surface && vessel.isOnSurface() && !vessel.getCurrentBody().Equals(Body.KERBIN));
+			if (action.from.isDockingPort() && action.to.isDockingPort()) {
+				switch (mode) {
+					case Mode.SURFACE:
+						dockStep = vessel.isOnSurface() && !vessel.getCurrentBody().Equals(Body.KERBIN);
+						break;
+					case Mode.ORBIT:
+						dockStep = vessel.isInStableOrbit();
+						break;
+				}
+			}
 		}
 
 		public override string getTitle() {

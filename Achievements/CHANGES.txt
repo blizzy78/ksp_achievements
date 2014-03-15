@@ -1,4 +1,8 @@
-﻿1.5.4, 2014-01-06
+﻿1.5.5
+- The achievements "We're Meant to Be Together" and "Base Builder" should now only trigger when
+  two actual docking ports are docked together.
+
+1.5.4, 2014-01-06
 - Fixed a bug that prevented the achievement "Sunburn" from getting earned correctly.
 - Clicking into the achievements list window will no longer click through in the editor.
 - Updated for Toolbar Plugin 1.4.1 (included.)
