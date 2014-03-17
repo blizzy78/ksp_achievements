@@ -32,7 +32,8 @@ namespace Achievements {
 				new SurfaceSample(),
 				new AllBodiesSurfaceSample(Body.STOCK_LANDABLE, "Pile of Dirt", "Take surface samples on all planets and moons.", "surfaceSample.allBodies"),
 				new AllBodiesSurfaceSample(Body.SENTAR_LANDABLE, "Another Pile of Dirt", "Take surface samples on all planets and moons in the Sentar and Serious systems.",
-					"surfaceSample.allBodies.sentar").addon()
+					"surfaceSample.allBodies.sentar").addon(),
+				new AsteroidSample()
 			});
 			return achievements;
 		}
@@ -151,6 +152,24 @@ namespace Achievements {
 
 		public override string getKey() {
 			return key;
+		}
+	}
+
+	internal class AsteroidSample : AchievementBase {
+		public override bool check(Vessel vessel) {
+			return (vessel != null) && vessel.isEVA() && vessel.hasAsteroidSample();
+		}
+
+		public override string getTitle() {
+			return "Found Some Space Dirt";
+		}
+
+		public override string getText() {
+			return "Take a sample of an asteroid.";
+		}
+
+		public override string getKey() {
+			return "asteroidSample";
 		}
 	}
 }

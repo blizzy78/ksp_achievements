@@ -44,7 +44,15 @@ namespace Achievements {
 		}
 
 		internal static bool isEVA(this Vessel vessel) {
-			return vessel.hasModule<KerbalEVA>() && vessel.Parts.Count() == 1;
+			return vessel.hasModule<KerbalEVA>() && (vessel.Parts.Count() == 1);
+		}
+
+		internal static bool isAsteroid(this Vessel vessel) {
+			return vessel.hasModule<ModuleAsteroid>() && (vessel.Parts.Count() == 1);
+		}
+
+		internal static bool hasGrabbedAsteroid(this Vessel vessel) {
+			return vessel.hasModule<ModuleAsteroid>();
 		}
 
 		internal static bool isInStableOrbit(this Vessel vessel) {
@@ -54,9 +62,28 @@ namespace Achievements {
 		}
 
 		internal static bool hasSurfaceSample(this Vessel vessel) {
-			return vessel.FindPartModulesImplementing<ModuleScienceExperiment>().Any(e =>
-					(e.experimentID == "surfaceSample") &&
-					e.GetData().Any(d => (d != null) && (d.dataAmount > 0)));
+			return vessel.hasScienceExperiment("surfaceSample");
+		}
+
+		internal static bool hasAsteroidSample(this Vessel vessel) {
+			return vessel.hasScienceExperiment("asteroidSample");
+		}
+
+		private static bool hasScienceExperiment(this Vessel vessel, string experimentId) {
+			experimentId += "@";
+			return vessel.getScienceDatas().Any(d => d.subjectID.StartsWith(experimentId) && (d.dataAmount > 0));
+		}
+
+		private static IEnumerable<ScienceData> getScienceDatas(this Vessel vessel) {
+			return vessel.getScienceDatasFromExperiments().Union(vessel.getScienceDatasFromContainers());
+		}
+
+		private static IEnumerable<ScienceData> getScienceDatasFromExperiments(this Vessel vessel) {
+			return vessel.FindPartModulesImplementing<ModuleScienceExperiment>().SelectMany(e => e.GetData()).Where(d => d != null);
+		}
+
+		private static IEnumerable<ScienceData> getScienceDatasFromContainers(this Vessel vessel) {
+			return vessel.FindPartModulesImplementing<ModuleScienceContainer>().SelectMany(c => c.GetData()).Where(d => d != null);
 		}
 
 		internal static int getEnginesCount(this Vessel vessel) {

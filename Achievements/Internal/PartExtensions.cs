@@ -30,6 +30,10 @@ namespace Achievements {
 			return part.hasModule<ModuleEngines>();
 		}
 
+		internal static bool isAsteroid(this Part part) {
+			return part.hasModule<ModuleAsteroid>();
+		}
+
 		internal static bool hasModule<T>(this Part part) where T : PartModule {
 			return part.Modules.OfType<T>().FirstOrDefault() != null;
 		}

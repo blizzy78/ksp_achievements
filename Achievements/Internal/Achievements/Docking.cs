@@ -24,20 +24,24 @@ using UnityEngine;
 namespace Achievements {
 	internal class DockingFactory : AchievementFactory {
 		public IEnumerable<Achievement> getAchievements() {
-				return new Achievement[] {
-				new Docking(Docking.Mode.ORBIT, "We're Meant to Be Together", "Perform a docking maneuver in orbit.", "docking")
+			return new Achievement[] {
+				new Docking(Docking.Mode.ORBIT, (action) => action.from.isDockingPort() && action.to.isDockingPort(),
+					"We're Meant to Be Together", "Perform a docking maneuver in orbit.", "docking"),
+				new Docking(Docking.Mode.ANY, (action) => action.from.isAsteroid() || action.to.isAsteroid(),
+					"Rock Collector", "Grab an asteroid.", "docking.asteroid")
 			};
 		}
 
 		public Category getCategory() {
-			return Category.GENERAL_FLIGHT;
+			return Category.SPACEFLIGHT;
 		}
 	}
 
 	internal class SurfaceDockingFactory : AchievementFactory {
 		public IEnumerable<Achievement> getAchievements() {
-				return new Achievement[] {
-				new Docking(Docking.Mode.SURFACE, "Base Builder", "Perform a docking maneuver on the surface of another planet or moon.", "docking.surface")
+			return new Achievement[] {
+				new Docking(Docking.Mode.SURFACE, (action) => action.from.isDockingPort() && action.to.isDockingPort(),
+					"Base Builder", "Perform a docking maneuver on the surface of another planet or moon.", "docking.surface")
 			};
 		}
 
@@ -48,17 +52,19 @@ namespace Achievements {
 
 	internal class Docking : AchievementBase {
 		internal enum Mode {
-			SURFACE, ORBIT
+			ANY, SURFACE, ORBIT
 		}
 
 		private Mode mode;
+		private Func<GameEvents.FromToAction<Part, Part>, bool> relevancy;
 		private string title;
 		private string text;
 		private string key;
 		private bool dockStep;
 
-		internal Docking(Mode mode, string title, string text, string key) {
+		internal Docking(Mode mode, Func<GameEvents.FromToAction<Part, Part>, bool> relevancy, string title, string text, string key) {
 			this.mode = mode;
+			this.relevancy = relevancy;
 			this.title = title;
 			this.text = text;
 			this.key = key;
@@ -72,8 +78,11 @@ namespace Achievements {
 
 		public void onPartCouple(GameEvents.FromToAction<Part, Part> action) {
 			Vessel vessel = action.from.vessel;
-			if (action.from.isDockingPort() && action.to.isDockingPort()) {
+			if (relevancy(action)) {
 				switch (mode) {
+					case Mode.ANY:
+						dockStep = true;
+						break;
 					case Mode.SURFACE:
 						dockStep = vessel.isOnSurface() && !vessel.getCurrentBody().Equals(Body.KERBIN);
 						break;
