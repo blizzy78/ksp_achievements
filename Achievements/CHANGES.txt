@@ -1,4 +1,8 @@
-﻿1.5.5, 2014-03-15
+﻿1.6.0, 2014-04-02
+- Added 4 new achievements (now 136 total.)
+- Updated for KSP 0.23.5 and Toolbar Plugin 1.7.1 (included.)
+
+1.5.5, 2014-03-15
 - The achievements "We're Meant to Be Together" and "Base Builder" should now only trigger when
   two actual docking ports are docked together.
 - Fixed a bug that caused several EVA achievements to trigger when a Kerbal was seated in a
