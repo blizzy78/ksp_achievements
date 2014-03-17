@@ -36,7 +36,9 @@ namespace Achievements {
 				new KesslerSyndrome(),
 				new SSTO(),
 				new JetPackOrbit(),
-				new SunEscapeTrajectory()
+				new SunEscapeTrajectory(),
+				new PreventAsteroidImpact(),
+				new MoveAsteroidIntoStableOrbit()
 			});
 			return achievements;
 		}
@@ -276,6 +278,82 @@ namespace Achievements {
 
 		public override string getKey() {
 			return "orbit.escapeSun";
+		}
+	}
+
+	internal class PreventAsteroidImpact : AchievementBase {
+		private bool impactStep;
+
+		internal PreventAsteroidImpact() {
+			registerOnVesselChange(onVesselChange);
+		}
+
+		private void onVesselChange(Vessel vessel) {
+			impactStep = false;
+		}
+
+		public override bool check(Vessel vessel) {
+			if ((vessel != null) && vessel.hasGrabbedAsteroid() && !vessel.isAsteroid()) {
+				bool impact = vessel.isOnImpactTrajectory();
+
+				if (!impactStep) {
+					impactStep = impact;
+				}
+
+				return impactStep && !impact;
+			} else {
+				return false;
+			}
+		}
+
+		public override string getTitle() {
+			return "Is it a Plane? Is it a Bird?";
+		}
+
+		public override string getText() {
+			return "Prevent an asteroid impact.";
+		}
+
+		public override string getKey() {
+			return "orbit.asteroid.preventImpact";
+		}
+	}
+
+	internal class MoveAsteroidIntoStableOrbit : OrbitAchievement {
+		private bool escapeStep;
+
+		internal MoveAsteroidIntoStableOrbit() {
+			registerOnVesselChange(onVesselChange);
+		}
+
+		private void onVesselChange(Vessel vessel) {
+			escapeStep = false;
+		}
+
+		public override bool check(Vessel vessel) {
+			if ((vessel != null) && vessel.hasGrabbedAsteroid() && !vessel.isAsteroid() && !vessel.orbit.referenceBody.Equals(Body.SUN.getCelestialBody())) {
+				bool escape = vessel.isOnEscapeTrajectory();
+
+				if (!escapeStep) {
+					escapeStep = escape;
+				}
+
+				return escapeStep && !escape && vessel.isInStableOrbit();
+			} else {
+				return false;
+			}
+		}
+
+		public override string getTitle() {
+			return "Once in a New Moon";
+		}
+
+		public override string getText() {
+			return "Move an asteroid into a stable orbit around a celestial body.";
+		}
+
+		public override string getKey() {
+			return "orbit.asteroid.moveIntoStableOrbit";
 		}
 	}
 }

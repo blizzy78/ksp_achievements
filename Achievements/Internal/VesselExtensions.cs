@@ -44,11 +44,11 @@ namespace Achievements {
 		}
 
 		internal static bool isEVA(this Vessel vessel) {
-			return vessel.hasModule<KerbalEVA>() && (vessel.Parts.Count() == 1);
+			return (vessel.Parts.Count() == 1) && vessel.hasModule<KerbalEVA>();
 		}
 
 		internal static bool isAsteroid(this Vessel vessel) {
-			return vessel.hasModule<ModuleAsteroid>() && (vessel.Parts.Count() == 1);
+			return (vessel.Parts.Count() == 1) && vessel.hasModule<ModuleAsteroid>();
 		}
 
 		internal static bool hasGrabbedAsteroid(this Vessel vessel) {
@@ -58,7 +58,33 @@ namespace Achievements {
 		internal static bool isInStableOrbit(this Vessel vessel) {
 			Orbit orbit = vessel.orbit;
 			float atmosphereAltitude = Math.Max(vessel.mainBody.maxAtmosphereAltitude, 0f);
-			return (orbit.ApA > 0) && (orbit.PeA > 0) && (orbit.ApA > atmosphereAltitude) && (orbit.PeA > atmosphereAltitude);
+			return (orbit.patchStartTransition == Orbit.PatchTransitionType.INITIAL) &&
+				(orbit.patchEndTransition == Orbit.PatchTransitionType.FINAL) &&
+				(orbit.ApA > 0) && (orbit.PeA > 0) && (orbit.ApA > atmosphereAltitude) && (orbit.PeA > atmosphereAltitude);
+		}
+
+		internal static bool isOnImpactTrajectory(this Vessel vessel) {
+			return vessel.getOrbitPatches().Any(o => {
+				try {
+					float atmosphereAltitude = Math.Max(o.referenceBody.maxAtmosphereAltitude, 0f);
+					if (o.PeA <= atmosphereAltitude) {
+						return true;
+					}
+				} catch (Exception) {
+					// Orbit.PeA may throw NullReferenceException
+				}
+				return false;
+			});
+		}
+
+		internal static bool isOnEscapeTrajectory(this Vessel vessel) {
+			return vessel.orbit.patchEndTransition == Orbit.PatchTransitionType.ESCAPE;
+		}
+
+		private static IEnumerable<Orbit> getOrbitPatches(this Vessel vessel) {
+			for (Orbit orbit = vessel.orbit; orbit != null; orbit = orbit.nextPatch) {
+				yield return orbit;
+			}
 		}
 
 		internal static bool hasSurfaceSample(this Vessel vessel) {
