@@ -24,7 +24,7 @@ using UnityEngine;
 namespace Achievements {
 	internal class AltitudeFactory : AchievementFactory {
 		public IEnumerable<Achievement> getAchievements() {
-				return new Achievement[] {
+			return new Achievement[] {
 				new Altitude("I'm Flying!", "Fly up to an altitude of 10000 m above the surface of Kerbin.", "flight.altitude." + Body.KERBIN.name + ".10000",
 					Body.KERBIN, 10000d, 11000d),
 				new Altitude("Sunburn", "Get within a distance of 1000 km to the Sun.", "flight.altitude." + Body.SUN.name + ".1000000",

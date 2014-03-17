@@ -24,7 +24,7 @@ using UnityEngine;
 namespace Achievements {
 	internal class KillFactory : AchievementFactory {
 		public IEnumerable<Achievement> getAchievements() {
-				return new Achievement[] {
+			return new Achievement[] {
 				new Kill(1, "Ouch!", "Kill a crew member.", true),
 				new Kill(10, "Bloodbath", "Kill 10 crew members in a single incident.", true),
 				new Kill(10, "Careless", "Kill 10 crew members.", false),

@@ -24,8 +24,8 @@ using UnityEngine;
 namespace Achievements {
 	internal class LandingFactory : AchievementFactory {
 		public IEnumerable<Achievement> getAchievements() {
-				List<Achievement> achievements = new List<Achievement>();
-				achievements.AddRange(new Achievement[] {
+			List<Achievement> achievements = new List<Achievement>();
+			achievements.AddRange(new Achievement[] {
 				new Landing(false, -1),
 
 				new BodyLanding(Body.MOHO, false, "Hot Foot"),

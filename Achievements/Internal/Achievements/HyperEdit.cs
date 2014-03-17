@@ -24,7 +24,7 @@ using UnityEngine;
 namespace Achievements {
 	internal class HyperEditFactory : AchievementFactory {
 		public IEnumerable<Achievement> getAchievements() {
-				return new Achievement[] {
+			return new Achievement[] {
 				new HyperEdit().addon()
 			};
 		}

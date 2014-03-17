@@ -25,11 +25,11 @@ using UnityEngine;
 namespace Achievements {
 	internal class OrbitFactory : AchievementFactory {
 		public IEnumerable<Achievement> getAchievements() {
-				List<Achievement> achievements = new List<Achievement>();
-				foreach (Body body in Body.ALL) {
-					achievements.Add(new BodyOrbit(body).addon(!body.isStock()));
-				}
-				achievements.AddRange(new Achievement[] {
+			List<Achievement> achievements = new List<Achievement>();
+			foreach (Body body in Body.ALL) {
+				achievements.Add(new BodyOrbit(body).addon(!body.isStock()));
+			}
+			achievements.AddRange(new Achievement[] {
 				new OrbitAchievement(),
 				new ExtraKerbalPlanetOrbit(),
 				new MoonOrbit(),

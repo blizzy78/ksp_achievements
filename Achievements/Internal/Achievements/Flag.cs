@@ -24,7 +24,7 @@ using UnityEngine;
 namespace Achievements {
 	internal class FlagFactory : AchievementFactory {
 		public IEnumerable<Achievement> getAchievements() {
-				return new Achievement[] {
+			return new Achievement[] {
 				new ExtraKerbalFlag(),
 				new AllBodiesFlags(Body.STOCK_LANDABLE, "All Your Base Are Belong to Us", "Plant a flag on every planet and moon.", "landing.allBodiesFlags"),
 				new AllBodiesFlags(Body.SENTAR_LANDABLE, "All Your Base Are Belong to Us - Sentar", "Plant a flag on every planet and moon in the Sentar and Serious systems.",
