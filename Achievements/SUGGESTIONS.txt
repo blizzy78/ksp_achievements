@@ -117,3 +117,11 @@ I wonder if I could fly through this,- find a mun arch.
 Neil-who?- find the Neil Armstrong memorial
 Journey to the center of the mun!-find a mun hole
 not of this kuniverse- find the mun UFO
+
+-------------------------------------------------------------------------------------------------------
+
+Deep Impact: Send a class E Asteroid into the KSC
+Colony Drop: Crash a vessel with over 50 kerbals with a dry mass of over 1000 tons(or something about 10 times as massive as a normal space station, haven't really thought that hard on this) into a atmosphere and lose every kerbal in the crash
+Go big or...: Successfully grab a Class E Asteroid and give it a stable orbit around kerbin
+Go Home!: Successfully land a ship carrying a Class E Asteroid on Kerbin
+Bottle it up, save some for later!: Launch a ship from Kerbin with a Type E Asteroid in tow.
