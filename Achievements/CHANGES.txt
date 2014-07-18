@@ -1,4 +1,8 @@
-﻿1.6.0, 2014-04-02
+﻿1.6.1, 2014-07-18
+- Achievements will now award 10 reputation instead of 5 science.
+- Updated for KSP 0.24.0 and Toolbar Plugin 1.7.4 (included.)
+
+1.6.0, 2014-04-02
 - Added 4 new achievements (now 136 total.)
 - Updated for KSP 0.23.5 and Toolbar Plugin 1.7.1 (included.)
 
