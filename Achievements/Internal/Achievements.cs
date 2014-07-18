@@ -44,8 +44,8 @@ namespace Achievements {
 		private HashSet<Achievement> queuedEarnedAchievements = new HashSet<Achievement>();
 		private AchievementsWindow achievementsWindow;
 		private LocationPicker locationPicker;
-		private RenderingManager renderingManager;
 		private IButton windowButton;
+		private bool showGui = true;
 
 		protected void Start() {
 			if (versionWWW == null) {
@@ -65,10 +65,16 @@ namespace Achievements {
 			windowButton.ToolTip = "Achievements";
 			windowButton.Visibility = new GameScenesVisibility(GameScenes.FLIGHT, GameScenes.TRACKSTATION, GameScenes.EDITOR, GameScenes.SPH);
 			windowButton.OnClick += (e) => toggleAchievementsWindow();
+
+			GameEvents.onShowUI.Add(onShowUI);
+			GameEvents.onHideUI.Add(onHideUI);
 		}
 
 		internal void OnDestroy() {
 			windowButton.Destroy();
+
+			GameEvents.onShowUI.Remove(onShowUI);
+			GameEvents.onHideUI.Remove(onHideUI);
 		}
 
 		internal void Update() {
@@ -136,7 +142,7 @@ namespace Achievements {
 		}
 
 		internal void OnGUI() {
-			if (!showGUI()) {
+			if (!showGui) {
 				return;
 			}
 
@@ -167,17 +173,12 @@ namespace Achievements {
 			}
 		}
 
-		private bool showGUI() {
-			if (renderingManager == null) {
-				renderingManager = (RenderingManager) GameObject.FindObjectOfType(typeof(RenderingManager));
-			}
+		private void onShowUI() {
+			showGui = true;
+		}
 
-			if (renderingManager != null) {
-				GameObject o = renderingManager.uiElementsToDisable.FirstOrDefault();
-				return (o == null) || o.activeSelf;
-			} else {
-				return false;
-			}
+		private void onHideUI() {
+			showGui = false;
 		}
 
 		private void drawLocationPickerButton() {
