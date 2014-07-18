@@ -29,7 +29,7 @@ namespace Achievements {
 
 		private const long VERSION = 15;
 		private const long CHECK_INTERVAL = 1500;
-		private const float SCIENCE_REWARD = 5;
+		private const float REPUTATION_REWARD = 10;
 
 		// debugging
 		private const bool SHOW_LOCATION_PICKER_BUTTON = false;
@@ -130,7 +130,7 @@ namespace Achievements {
 
 						toast = new Toast(achievement, EarnedAchievements.instance.earnedAchievements[achievement]);
 						playAchievementEarnedClip();
-						awardScience(achievement);
+						awardReputation(achievement);
 						highlightButton();
 					}
 				}
@@ -226,10 +226,9 @@ namespace Achievements {
 			}
 		}
 
-		private void awardScience(Achievement achievement) {
-			if (ResearchAndDevelopment.Instance != null) {
-				ScienceSubject subject = new ScienceSubject("achievement", "Achievement: " + achievement.getTitle(), 1, SCIENCE_REWARD, 10000);
-				ResearchAndDevelopment.Instance.SubmitScienceData(1, subject);
+		private void awardReputation(Achievement achievement) {
+			if (Reputation.Instance != null) {
+				Reputation.Instance.AddReputation(REPUTATION_REWARD, "Achievement: " + achievement.getTitle());
 			}
 		}
 
