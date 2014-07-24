@@ -27,7 +27,7 @@ namespace Achievements {
 	internal class Achievements : MonoBehaviour {
 		internal const string UNKNOWN_VESSEL = "unknown";
 
-		private const long VERSION = 16;
+		private const long VERSION = 17;
 		private const long CHECK_INTERVAL = 1500;
 		private const float REPUTATION_REWARD = 10;
 
