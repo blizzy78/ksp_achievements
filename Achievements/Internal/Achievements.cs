@@ -26,16 +26,12 @@ namespace Achievements {
 	[KSPAddon(KSPAddon.Startup.EveryScene, false)]
 	internal class Achievements : MonoBehaviour {
 		internal const string UNKNOWN_VESSEL = "unknown";
+		internal const long VERSION = 17;
 
-		private const long VERSION = 17;
 		private const long CHECK_INTERVAL = 1500;
 		private const float REPUTATION_REWARD = 10;
 
-		// debugging
-		private const bool SHOW_LOCATION_PICKER_BUTTON = false;
-
-		private static WWW versionWWW;
-		private static bool? newVersionAvailable = null;
+		internal static UpdateChecker UpdateChecker;
 
 		private long lastCheck = 0;
 		private AudioClip achievementEarnedClip;
@@ -43,13 +39,15 @@ namespace Achievements {
 		private Toast toast;
 		private HashSet<Achievement> queuedEarnedAchievements = new HashSet<Achievement>();
 		private AchievementsWindow achievementsWindow;
+#if LOCATION_PICKER
 		private LocationPicker locationPicker;
+#endif
 		private IButton windowButton;
 		private bool showGui = true;
 
 		protected void Start() {
-			if (versionWWW == null) {
-				versionWWW = new WWW("http://blizzy.de/achievements/version.txt");
+			if (UpdateChecker == null) {
+				UpdateChecker = new UpdateChecker();
 			}
 
 			achievementEarnedClip = GameDatabase.Instance.GetAudioClip("blizzy/Achievements/achievement");
@@ -84,6 +82,8 @@ namespace Achievements {
 			if (achievementsWindow != null) {
 				achievementsWindow.update();
 			}
+
+			UpdateChecker.update();
 		}
 
 		private void updateAchievements() {
@@ -135,8 +135,6 @@ namespace Achievements {
 					}
 				}
 
-				checkForNewVersion();
-
 				lastCheck = now;
 			}
 		}
@@ -151,9 +149,11 @@ namespace Achievements {
 				achievementsWindow = null;
 			}
 
+#if LOCATION_PICKER
 			if (SHOW_LOCATION_PICKER_BUTTON && (HighLogic.LoadedScene == GameScenes.FLIGHT) && MapView.MapIsEnabled) {
 				drawLocationPickerButton();
 			}
+#endif
 
 			if (toast != null) {
 				if (!toast.isTimedOut()) {
@@ -168,9 +168,11 @@ namespace Achievements {
 				achievementsWindow.draw();
 			}
 
+#if LOCATION_PICKER
 			if (locationPicker != null) {
 				locationPicker.draw();
 			}
+#endif
 		}
 
 		private void onShowUI() {
@@ -193,7 +195,8 @@ namespace Achievements {
 
 		private void toggleAchievementsWindow() {
 			if (achievementsWindow == null) {
-				achievementsWindow = new AchievementsWindow(EarnedAchievements.instance.achievements, EarnedAchievements.instance.earnedAchievements, newVersionAvailable == true);
+				achievementsWindow = new AchievementsWindow(EarnedAchievements.instance.achievements, EarnedAchievements.instance.earnedAchievements,
+					UpdateChecker.Done && (UpdateChecker.UpdateAvailable == true));
 				achievementsWindow.closeCallback = () => {
 					achievementsWindow = null;
 				};
@@ -206,6 +209,7 @@ namespace Achievements {
 		}
 
 		private void toggleLocationPicker() {
+#if LOCATION_PICKER
 			if (locationPicker == null) {
 				MapView.EnterMapView();
 				locationPicker = new LocationPicker();
@@ -217,6 +221,7 @@ namespace Achievements {
 				locationPicker.destroy();
 				locationPicker = null;
 			}
+#endif
 		}
 
 		private void playAchievementEarnedClip() {
@@ -229,20 +234,6 @@ namespace Achievements {
 		private void awardReputation(Achievement achievement) {
 			if (Reputation.Instance != null) {
 				Reputation.Instance.AddReputation(REPUTATION_REWARD, "Achievement: " + achievement.getTitle());
-			}
-		}
-
-		private void checkForNewVersion() {
-			if ((newVersionAvailable == null) && String.IsNullOrEmpty(versionWWW.error) && versionWWW.isDone) {
-				try {
-					long ver = long.Parse(versionWWW.text);
-					newVersionAvailable = ver > VERSION;
-					if (newVersionAvailable == true) {
-						highlightButton();
-					}
-				} catch (Exception) {
-					// ignore
-				}
 			}
 		}
 

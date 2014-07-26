@@ -23,8 +23,10 @@ using UnityEngine;
 
 namespace Achievements {
 	internal class InfoWindow {
+#pragma warning disable 649
 		internal Callback closeCallback;
 		internal Callback guiCallback;
+#pragma warning restore 649
 		internal string text = "";
 
 		private string title;

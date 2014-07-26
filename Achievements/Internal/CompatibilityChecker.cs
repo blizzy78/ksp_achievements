@@ -25,6 +25,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
@@ -51,11 +52,36 @@ namespace Achievements {
 
 			const int major = 0;
 			const int minor = 24;
-			const int revision = 1;
+			const int revision = 2;
 
-			return (Versioning.version_major == major) &&
-				(Versioning.version_minor == minor) &&
-				(Versioning.Revision == revision);
+			bool hardcodedOk = (Versioning.version_major == major) && (Versioning.version_minor == minor) && (Versioning.Revision == revision);
+			bool kspVersionOk = false;
+
+			string currentKspVersion = string.Format(CultureInfo.InvariantCulture, "{0:F0}.{1:F0}.{2:F0}",
+				Versioning.version_major, Versioning.version_minor, Versioning.Revision);
+			if (hardcodedOk) {
+				Log.info("current KSP version {0} is compatible (hardcoded)", currentKspVersion);
+			} else {
+				if (Achievements.UpdateChecker.Done &&
+					(Achievements.UpdateChecker.KspVersions != null) &&
+					(Achievements.UpdateChecker.KspVersions.Length > 0)) {
+
+					foreach (string kspVersion in Achievements.UpdateChecker.KspVersions) {
+						if (kspVersion == currentKspVersion) {
+							Log.info("current KSP version {0} is compatible (via update check)", currentKspVersion);
+							kspVersionOk = true;
+							break;
+						}
+					}
+					if (!kspVersionOk) {
+						Log.warn("current KSP version {0} is incompatible (via update check)", currentKspVersion);
+					}
+				} else {
+					Log.warn("current KSP version {0} is incompatible (hardcoded)", currentKspVersion);
+				}
+			}
+
+			return hardcodedOk || kspVersionOk;
 
 			/*-----------------------------------------------*\
 			| IMPLEMENTERS SHOULD NOT EDIT BEYOND THIS POINT! |

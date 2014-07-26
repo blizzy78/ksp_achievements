@@ -21,6 +21,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
+#if LOCATION_PICKER
 namespace Achievements {
 	internal class LocationPicker {
 		internal Callback closeCallback;
@@ -112,3 +113,4 @@ namespace Achievements {
 		}
 	}
 }
+#endif

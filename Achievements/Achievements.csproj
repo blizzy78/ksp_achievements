@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\..\Programme\KSP_0_24_1_64_dev\GameData\blizzy\Achievements\</OutputPath>
+    <OutputPath>..\..\..\..\Programme\KSP_0_24_2_64_dev\GameData\blizzy\Achievements\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -25,14 +25,14 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\..\Programme\KSP_0_24_1_64_dev\GameData\blizzy\Achievements\</OutputPath>
+    <OutputPath>..\..\..\..\Programme\KSP_0_24_2_64_dev\GameData\blizzy\Achievements\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\..\..\Programme\KSP_0_24_1_64_dev\KSP_x64_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <HintPath>..\..\..\..\Programme\KSP_0_24_2_64_dev\KSP_x64_Data\Managed\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -41,10 +41,10 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="Toolbar">
-      <HintPath>..\..\..\..\Programme\KSP_0_24_1_64_dev\GameData\000_Toolbar\Toolbar.dll</HintPath>
+      <HintPath>..\..\..\..\Programme\KSP_0_24_2_64_dev\GameData\000_Toolbar\Toolbar.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine">
-      <HintPath>..\..\..\..\Programme\KSP_0_24_1_64_dev\KSP_x64_Data\Managed\UnityEngine.dll</HintPath>
+      <HintPath>..\..\..\..\Programme\KSP_0_24_2_64_dev\KSP_x64_Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -77,7 +77,9 @@
     <Compile Include="Internal\EditorLock.cs" />
     <Compile Include="Internal\Extensions.cs" />
     <Compile Include="Internal\InfoWindow.cs" />
+    <Compile Include="Internal\Log.cs" />
     <Compile Include="Internal\PartExtensions.cs" />
+    <Compile Include="Internal\UpdateChecker.cs" />
     <Compile Include="Internal\VesselExtensions.cs" />
     <Compile Include="Internal\Location.cs" />
     <Compile Include="Internal\LocationPicker.cs" />
