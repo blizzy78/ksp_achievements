@@ -1,4 +1,11 @@
-﻿1.6.2, 2014-07-25
+﻿1.6.3, 2014-07-27
+- In addition to the automatic update check, the plugin now also gets KSP versions
+  from the update check server. In case the currently running KSP version is one of
+  those versions, the plugin will not complain about being incompatible with this
+  KSP version. This saves both players' and the plugin author's time.
+- Updated for KSP 0.24.2 and Toolbar Plugin 1.7.6 (included.)
+
+1.6.2, 2014-07-25
 - Updated for KSP 0.24.1 and Toolbar Plugin 1.7.5 (included.)
 
 1.6.1, 2014-07-18

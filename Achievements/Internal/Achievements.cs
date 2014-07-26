@@ -26,7 +26,7 @@ namespace Achievements {
 	[KSPAddon(KSPAddon.Startup.EveryScene, false)]
 	internal class Achievements : MonoBehaviour {
 		internal const string UNKNOWN_VESSEL = "unknown";
-		internal const long VERSION = 17;
+		internal const long VERSION = 18;
 
 		private const long CHECK_INTERVAL = 1500;
 		private const float REPUTATION_REWARD = 10;
