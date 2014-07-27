@@ -125,3 +125,16 @@ Colony Drop: Crash a vessel with over 50 kerbals with a dry mass of over 1000 to
 Go big or...: Successfully grab a Class E Asteroid and give it a stable orbit around kerbin
 Go Home!: Successfully land a ship carrying a Class E Asteroid on Kerbin
 Bottle it up, save some for later!: Launch a ship from Kerbin with a Type E Asteroid in tow.
+
+-------------------------------------------------------------------------------------------------------
+
+- SSTGSO (Single Stage to geostationary (6 hours circular) orbit)
+- launch from specific Kerbinside launchpad/runway/helipad
+- land on specific Kerbinside runway/launchpad (after 10km altitude check of course)
+- visit all Kerbinside launch sites with the same vessel (no recoveries, probably difficult implementation)
+- complete 10/20/50/100/200/500/1000/2000/5000/10k/20k/50k contracts
+- fail 1/5/10/50/100 contracts
+- earn 100k/500k/1M/5M/10M/100M/1B/10B/100B funds
+- go bankrupt
+- scansat - scan 100% low res, hi res, biomes, anomalies of the body X (Kerbin, Mun, Minmus, planets, moons, and the sun)
+- tarsier - examine at least 10 bodies (collect science) from the orbit of body X (Kerbin, Mun, Minmus, planets, moons, and the sun)
